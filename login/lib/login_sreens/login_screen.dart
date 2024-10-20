@@ -25,11 +25,34 @@ class _LoginscreenState extends State<Loginscreen> {
                     Container(
                       child: Image.asset('packages/login/assets/images/fiaologo.PNG'),
                     ),
-                    Text("FiaoExpressApp",style: TextStyle(
-                      color: Colors.lime[400],
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold
-                    ),)
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("FIAO",style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                        ),
+                        ),
+                        Text("EXPRESS",style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Dorgan',
+                        ),
+                        ),
+                      ],
+                    ),
+
+                    TextField(
+                      decoration: InputDecoration(
+
+                      ),
+                    ),
+                    TextField(),
                   ],
                 ),
               )
