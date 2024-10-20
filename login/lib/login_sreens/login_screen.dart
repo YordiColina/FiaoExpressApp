@@ -18,46 +18,48 @@ class _LoginscreenState extends State<Loginscreen> {
           color: Colors.black
         ),
         child: Center(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height *0.1),
-                child: Column(
-                  children: [
-                    Image.asset('packages/login/assets/images/fiaologo.PNG'),
-                     const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("FIAO",style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 32,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.w800,
-                          fontFamily: 'Dorgan',
-                        ),
-                        ),
-                        Text("EXPRESS",style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 32,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Dorgan',
-                        ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 80
-                    ),
-                    const LoginBody(),
-                    const SizedBox(
-                        height: 40
-                    ),
-                    const LoginButtons()
-                  ],
-                ),
-              )
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height *0.1),
+                  child: Column(
+                    children: [
+                      Image.asset('packages/login/assets/images/fiaologo.PNG'),
+                       const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("FIAO",style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 32,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                          ),
+                          ),
+                          Text("EXPRESS",style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 32,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Dorgan',
+                          ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 60
+                      ),
+                      const LoginBody(),
+                      const SizedBox(
+                          height: 40
+                      ),
+                      const LoginButtons()
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
