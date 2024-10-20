@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Miscellaneous
 *.class
 *.log
@@ -41,3 +42,57 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+=======
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+pubspec.lock
+
+# Build outputs
+build/
+ios/Flutter/.last_build_id
+ios/Flutter/flutter_export_environment.sh
+
+# Android
+android/.gradle/
+android/app/build/
+android/app/intermediates/
+android/app/outputs/
+android/.idea/
+android/local.properties
+
+# Xcode
+ios/Pods/
+ios/Runner.xcworkspace/
+ios/Runner.xcworkspace/xcuserdata/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+
+# Other files
+*.iml
+*.log
+*.lock
+*.class
+*.so
+*.dll
+*.exe
+*.o
+*.dSYM
+*.pdb
+*.apk
+*.app
+*.ipa
+*.jks
+*.keystore
+*.hprof
+*.sublime-project
+*.sublime-workspace
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+>>>>>>> 255da62ba949f71378ffaf380d662e224a6c5d60
