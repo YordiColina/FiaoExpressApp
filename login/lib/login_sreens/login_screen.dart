@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:login/login_sreens/login_body.dart';
+import 'package:login/login_sreens/login_buttons.dart';
 
 class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});
@@ -12,7 +14,7 @@ class _LoginscreenState extends State<Loginscreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.black
         ),
         child: Center(
@@ -22,10 +24,8 @@ class _LoginscreenState extends State<Loginscreen> {
                 padding: EdgeInsets.only(top: MediaQuery.of(context).size.height *0.1),
                 child: Column(
                   children: [
-                    Container(
-                      child: Image.asset('packages/login/assets/images/fiaologo.PNG'),
-                    ),
-                     Row(
+                    Image.asset('packages/login/assets/images/fiaologo.PNG'),
+                     const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("FIAO",style: TextStyle(
@@ -46,37 +46,14 @@ class _LoginscreenState extends State<Loginscreen> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 20
+                    const SizedBox(
+                      height: 80
                     ),
-
-                    TextField(
-
-                      decoration: InputDecoration(
-
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                          borderSide: BorderSide(
-                            color: Colors.white, // Color del borde
-                            width: 2.0, // Ancho del borde
-                          ),
-                        ),
-                      ),
+                    const LoginBody(),
+                    const SizedBox(
+                        height: 40
                     ),
-                    SizedBox(
-                        height: 20
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                          borderSide: BorderSide(
-                            color: Colors.white, // Color del borde
-                            width: 2.0, // Ancho del borde
-                          ),
-                        ),
-                      ),
-                    ),
+                    const LoginButtons()
                   ],
                 ),
               )
