@@ -25,7 +25,7 @@ class _LoginscreenState extends State<Loginscreen> {
                     Container(
                       child: Image.asset('packages/login/assets/images/fiaologo.PNG'),
                     ),
-                    const Row(
+                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("FIAO",style: TextStyle(
@@ -46,13 +46,37 @@ class _LoginscreenState extends State<Loginscreen> {
                         ),
                       ],
                     ),
+                    SizedBox(
+                      height: 20
+                    ),
 
                     TextField(
+
                       decoration: InputDecoration(
 
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                          borderSide: BorderSide(
+                            color: Colors.white, // Color del borde
+                            width: 2.0, // Ancho del borde
+                          ),
+                        ),
                       ),
                     ),
-                    TextField(),
+                    SizedBox(
+                        height: 20
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                          borderSide: BorderSide(
+                            color: Colors.white, // Color del borde
+                            width: 2.0, // Ancho del borde
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               )
