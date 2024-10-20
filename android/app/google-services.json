@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "919562096282",
+    "project_id": "fiaoexpressapp-a166b",
+    "storage_bucket": "fiaoexpressapp-a166b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919562096282:android:0be9a1a9e43c165a275923",
+        "android_client_info": {
+          "package_name": "com.fiao_express_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfazadjW5kMFOpvNBXEK9UxnppenGmrT0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
