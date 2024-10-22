@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:login/home_screens/client_data.dart';
 import 'package:login/home_screens/contract_data.dart';
+import 'package:login/home_screens/importan_milestones_dates.dart';
 import 'package:login/home_screens/initial_invertion.dart';
+import 'package:login/home_screens/motorcycle_delivery_data.dart';
 import 'package:login/home_screens/payment_additional_fees.dart';
 import 'package:login/home_screens/selection_group_description.dart';
 
@@ -49,6 +51,11 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: 20,
               ),
+              ImportanMilestonesDates(),
+              SizedBox(
+                height: 20,
+              ),
+              MotorcycleDeliveryData(),
 
             ],
           ),

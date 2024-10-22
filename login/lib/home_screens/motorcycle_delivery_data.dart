@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
-class ClientData extends StatefulWidget {
-  const ClientData({super.key});
+class MotorcycleDeliveryData extends StatefulWidget {
+  const MotorcycleDeliveryData({super.key});
 
   @override
-  State<ClientData> createState() => _ClientDataState();
+  State<MotorcycleDeliveryData> createState() => _MotorcycleDeliveryDataState();
 }
 
-class _ClientDataState extends State<ClientData> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController identificationController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
+class _MotorcycleDeliveryDataState extends State<MotorcycleDeliveryData> {
+  TextEditingController deliveryDateController = TextEditingController();
+  TextEditingController groupController = TextEditingController();
+  TextEditingController colorController = TextEditingController();
+  TextEditingController motorSerialController = TextEditingController();
+  TextEditingController bodySerialController = TextEditingController();
+  TextEditingController observationController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -21,12 +23,13 @@ class _ClientDataState extends State<ClientData> {
         children: [
           Padding(
             padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.40),
-            child: const Text("Datos del cliente",style: TextStyle(
+            child: const Text("Datos de entrega de la moto",style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w800,
               fontFamily: 'Dorgan',
               fontStyle: FontStyle.italic,
             ),
+              maxLines: 2,
             ),
           ),
 
@@ -35,7 +38,7 @@ class _ClientDataState extends State<ClientData> {
           ),
 
           TextField(
-            controller: nameController,
+            controller: deliveryDateController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -45,7 +48,7 @@ class _ClientDataState extends State<ClientData> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
-              hintText: "Nombre",
+              hintText: "Fecha de entrega",
               hintStyle: const TextStyle(
                 color: Colors.grey,
                 fontFamily: 'Dorgan',
@@ -67,7 +70,7 @@ class _ClientDataState extends State<ClientData> {
           ),
 
           TextField(
-            controller: identificationController,
+            controller: colorController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -77,38 +80,7 @@ class _ClientDataState extends State<ClientData> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
-              hintText: "Cédula",
-              hintStyle: const TextStyle(
-                color: Colors.grey,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.w400,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                borderSide: const BorderSide(
-                  color: Colors.white, // Color del borde
-                  width: 2.0, // Ancho del borde
-                ),
-              ),
-            ),
-          ),
-
-          const SizedBox(
-            height: 10,
-          ),
-          TextField(
-            controller: phoneController,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              fontFamily: 'Dorgan',
-              fontStyle: FontStyle.italic,
-            ),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              hintText: "Teléfono",
+              hintText: "Color",
               hintStyle: const TextStyle(
                 color: Colors.grey,
                 fontFamily: 'Dorgan',
@@ -129,8 +101,9 @@ class _ClientDataState extends State<ClientData> {
             height: 10,
           ),
 
+
           TextField(
-            controller: addressController,
+            controller: motorSerialController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -140,7 +113,101 @@ class _ClientDataState extends State<ClientData> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
-              hintText: "Dirección",
+              hintText: "Serial motor",
+              hintStyle: const TextStyle(
+                color: Colors.grey,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w400,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                borderSide: const BorderSide(
+                  color: Colors.white, // Color del borde
+                  width: 2.0, // Ancho del borde
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(
+            height: 10,
+          ),
+          TextField(
+            controller: bodySerialController,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              fontFamily: 'Dorgan',
+              fontStyle: FontStyle.italic,
+            ),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              hintText: "Serial carrocería",
+              hintStyle: const TextStyle(
+                color: Colors.grey,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w400,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                borderSide: const BorderSide(
+                  color: Colors.white, // Color del borde
+                  width: 2.0, // Ancho del borde
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(
+            height: 10,
+          ),
+
+          TextField(
+            controller: observationController,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              fontFamily: 'Dorgan',
+              fontStyle: FontStyle.italic,
+            ),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              hintText: "Placa",
+              hintStyle: const TextStyle(
+                color: Colors.grey,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w400,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                borderSide: const BorderSide(
+                  color: Colors.white, // Color del borde
+                  width: 2.0, // Ancho del borde
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(
+            height: 10,
+          ),
+          TextField(
+
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              fontFamily: 'Dorgan',
+              fontStyle: FontStyle.italic,
+            ),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              hintText: "Observación",
               hintStyle: const TextStyle(
                 color: Colors.grey,
                 fontFamily: 'Dorgan',

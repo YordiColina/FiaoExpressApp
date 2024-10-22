@@ -10,6 +10,9 @@ class ContractData extends StatefulWidget {
 }
 
 class _ContractDataState extends State<ContractData> {
+  TextEditingController contractNumberController = TextEditingController();
+  TextEditingController contractDateController = TextEditingController();
+  TextEditingController adviserController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -33,7 +36,7 @@ class _ContractDataState extends State<ContractData> {
           ),
 
           TextField(
-
+            controller: contractNumberController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -65,7 +68,7 @@ class _ContractDataState extends State<ContractData> {
           ),
 
           TextField(
-
+            controller: contractDateController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -96,7 +99,7 @@ class _ContractDataState extends State<ContractData> {
             height: 10,
           ),
           TextField(
-
+            controller: adviserController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,

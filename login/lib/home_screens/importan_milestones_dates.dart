@@ -1,17 +1,17 @@
-
 import 'package:flutter/material.dart';
 
-class SelectionGroupDescription extends StatefulWidget {
-  const SelectionGroupDescription({super.key});
+class ImportanMilestonesDates extends StatefulWidget {
+  const ImportanMilestonesDates({super.key});
 
   @override
-  State<SelectionGroupDescription> createState() => _SelectionGroupDescriptionState();
+  State<ImportanMilestonesDates> createState() => _ImportanMilestonesDatesState();
 }
-TextEditingController groupController = TextEditingController();
-TextEditingController modelController = TextEditingController();
-TextEditingController brandController = TextEditingController();
 
-class _SelectionGroupDescriptionState extends State<SelectionGroupDescription> {
+class _ImportanMilestonesDatesState extends State<ImportanMilestonesDates> {
+  TextEditingController faseController = TextEditingController();
+  TextEditingController nextPayController = TextEditingController();
+  TextEditingController nextAwardController = TextEditingController();
+  TextEditingController nextdeliverDateController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -21,7 +21,7 @@ class _SelectionGroupDescriptionState extends State<SelectionGroupDescription> {
         children: [
           Padding(
             padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.40),
-            child: const Text("Descripción del grupo seleccionado",style: TextStyle(
+            child: const Text("Fechas de hitos importantes",style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w800,
               fontFamily: 'Dorgan',
@@ -36,7 +36,7 @@ class _SelectionGroupDescriptionState extends State<SelectionGroupDescription> {
           ),
 
           TextField(
-            controller: groupController,
+            controller: faseController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -46,7 +46,7 @@ class _SelectionGroupDescriptionState extends State<SelectionGroupDescription> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
-              hintText: "Grupo",
+              hintText: "fase",
               hintStyle: const TextStyle(
                 color: Colors.grey,
                 fontFamily: 'Dorgan',
@@ -68,7 +68,7 @@ class _SelectionGroupDescriptionState extends State<SelectionGroupDescription> {
           ),
 
           TextField(
-            controller: modelController,
+            controller: nextPayController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -78,7 +78,7 @@ class _SelectionGroupDescriptionState extends State<SelectionGroupDescription> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
-              hintText: "Modelo de moto",
+              hintText: "Fecha próximo pago",
               hintStyle: const TextStyle(
                 color: Colors.grey,
                 fontFamily: 'Dorgan',
@@ -99,7 +99,7 @@ class _SelectionGroupDescriptionState extends State<SelectionGroupDescription> {
             height: 10,
           ),
           TextField(
-            controller: brandController,
+            controller: nextAwardController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -109,7 +109,39 @@ class _SelectionGroupDescriptionState extends State<SelectionGroupDescription> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
-              hintText: "Marca",
+              hintText: "Fecha próxima adjudicación",
+              hintStyle: const TextStyle(
+                color: Colors.grey,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w400,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                borderSide: const BorderSide(
+                  color: Colors.white, // Color del borde
+                  width: 2.0, // Ancho del borde
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(
+            height: 10,
+          ),
+
+          TextField(
+            controller: nextdeliverDateController,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              fontFamily: 'Dorgan',
+              fontStyle: FontStyle.italic,
+            ),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              hintText: "Fecha próxima entrega",
               hintStyle: const TextStyle(
                 color: Colors.grey,
                 fontFamily: 'Dorgan',

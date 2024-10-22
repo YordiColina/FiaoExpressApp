@@ -9,6 +9,8 @@ class InitialInvertion extends StatefulWidget {
 }
 
 class _InitialInvertionState extends State<InitialInvertion> {
+  TextEditingController feesController = TextEditingController();
+  TextEditingController admBillsController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,7 +34,7 @@ class _InitialInvertionState extends State<InitialInvertion> {
           ),
 
           TextField(
-
+            controller: feesController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -64,7 +66,7 @@ class _InitialInvertionState extends State<InitialInvertion> {
           ),
 
           TextField(
-
+            controller: admBillsController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,

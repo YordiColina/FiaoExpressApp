@@ -9,6 +9,8 @@ class PaymentAdditionalFees extends StatefulWidget {
 }
 
 class _PaymentAdditionalFeesState extends State<PaymentAdditionalFees> {
+  TextEditingController fleesNumberController = TextEditingController();
+  TextEditingController subtotalController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -33,7 +35,7 @@ class _PaymentAdditionalFeesState extends State<PaymentAdditionalFees> {
           ),
 
           TextField(
-
+            controller: fleesNumberController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -65,7 +67,7 @@ class _PaymentAdditionalFeesState extends State<PaymentAdditionalFees> {
           ),
 
           TextField(
-
+            controller: subtotalController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,

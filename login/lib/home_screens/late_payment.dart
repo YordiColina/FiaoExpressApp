@@ -11,6 +11,8 @@ class LatePayment extends StatefulWidget {
 class _LatePaymentState extends State<LatePayment> {
   @override
   Widget build(BuildContext context) {
+    TextEditingController lateDaysController = TextEditingController();
+    TextEditingController latePayController = TextEditingController();
     return Padding(
       padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width *0.050,
           right: MediaQuery.of(context).size.width *0.050),
@@ -32,7 +34,7 @@ class _LatePaymentState extends State<LatePayment> {
           ),
 
           TextField(
-
+            controller: lateDaysController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -64,7 +66,7 @@ class _LatePaymentState extends State<LatePayment> {
           ),
 
           TextField(
-
+            controller: latePayController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
