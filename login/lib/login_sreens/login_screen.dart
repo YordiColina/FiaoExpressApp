@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:login/login_sreens/login_body.dart';
-import 'package:login/login_sreens/login_buttons.dart';
 
 class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});
@@ -25,7 +24,17 @@ class _LoginscreenState extends State<Loginscreen> {
                   padding: EdgeInsets.only(top: MediaQuery.of(context).size.height *0.1),
                   child: Column(
                     children: [
-                      Image.asset('packages/login/assets/images/fiaologo.PNG'),
+                      Container(
+                        decoration: BoxDecoration(
+                         border: Border.all(color: Colors.white),
+                         borderRadius: BorderRadius.circular(20)
+                         ),
+
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset('packages/login/assets/images/newlogo.jpg',scale: 1.5,fit: BoxFit.cover))
+
+                      ),
                        const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -54,7 +63,6 @@ class _LoginscreenState extends State<Loginscreen> {
                       const SizedBox(
                           height: 40
                       ),
-                      const LoginButtons()
                     ],
                   ),
                 )
