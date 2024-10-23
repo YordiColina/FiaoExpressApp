@@ -43,11 +43,13 @@ TextEditingController colorController = TextEditingController();
 TextEditingController motorSerialController = TextEditingController();
 TextEditingController bodySerialController = TextEditingController();
 TextEditingController observationController = TextEditingController();
+TextEditingController ubicationController = TextEditingController();
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).size.width *0.15 ),
         child:  SingleChildScrollView(
@@ -58,6 +60,17 @@ class _HomeScreenState extends State<HomeScreen> {
             right: MediaQuery.of(context).size.width *0.050),
         child: Column(
           children: [
+            const Center(
+              child: Text("Registro de Clientes", style:TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+              ),),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             Padding(
               padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.40),
               child: const Text("Datos del contrato",style: TextStyle(
@@ -106,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             TextField(
+              keyboardType: TextInputType.datetime,
               controller: contractDateController,
               style: const TextStyle(
                 fontSize: 18,
@@ -834,6 +848,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             TextField(
+              keyboardType: TextInputType.datetime,
               controller: nextdeliverDateController,
               style: const TextStyle(
                 fontSize: 18,
@@ -1084,6 +1099,61 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+              Padding(
+                padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width *0.050,
+                    right: MediaQuery.of(context).size.width *0.050),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.60),
+                      child: const Text("Ubicación",style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                        fontFamily: 'Dorgan',
+                        fontStyle: FontStyle.italic,
+                      ),
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 10,
+                    ),
+
+                    TextField(
+                      controller: ubicationController,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        fontFamily: 'Dorgan',
+                        fontStyle: FontStyle.italic,
+                      ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: "Ciudad",
+                        hintStyle: const TextStyle(
+                          color: Colors.grey,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                          borderSide: const BorderSide(
+                            color: Colors.white, // Color del borde
+                            width: 2.0, // Ancho del borde
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 10,
+                    ),
+
+                  ],
+                ),
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -1091,7 +1161,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                   crearDocumentoEnFirestore();
               },
-                  child: const Text(" crear cliente",style:
+                  style:  ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[300]
+                  ),
+                  child: const Text(" Crear cliente",style:
                   TextStyle(
                     color: Colors.black,
                     fontFamily: 'Dorgan',
@@ -1185,6 +1258,11 @@ class _HomeScreenState extends State<HomeScreen> {
           'observacion': observationController.text
         };
 
+        Map<String, dynamic> ubicacion = {
+          'ciudad': ubicationController.text,
+
+        };
+
         // Combina los dos mapas en un solo documento
         Map<String, dynamic> documentoCompleto = {
           'datosContrato': datosContrato,
@@ -1194,7 +1272,8 @@ class _HomeScreenState extends State<HomeScreen> {
           'pago_de_cuotas_adicionales': pagoDeCuotasAdicionales,
           'pago_de_morosidad': pago_de_morosidad,
           'fechas_de_hitos_importantes': fechas_de_hitos_importantes,
-          'datos_de_entrega_de_la_moto': datos_de_entrega_de_la_moto
+          'datos_de_entrega_de_la_moto': datos_de_entrega_de_la_moto,
+          'ubicacion': ubicacion,
         };
 
         // Agrega el documento a Firestore
@@ -1202,6 +1281,37 @@ class _HomeScreenState extends State<HomeScreen> {
             documentoCompleto);
 
         print('Documento creado exitosamente');
+        setState(() {
+          contractNumberController.text = "";
+          contractDateController.text = "";
+          adviserController.text = "";
+          nameController.text = "";
+          identificationController.text = "";
+          phoneController.text = "";
+          addressController.text = "";
+          groupController.text = "";
+          modelController.text = "";
+          brandController.text = "";
+          feesController.text = "";
+          admBillsController.text = "";
+          fleesNumberController.text = "";
+          subtotalController.text = "";
+          lateDaysController.text = "";
+          latePayController.text = "";
+          faseController.text = "";
+          nextPayController.text = "";
+          nextAwardController.text = "";
+          nextdeliverDateController.text = "";
+          deliveryDateController.text = "";
+          plateController.text = "";
+          colorController.text = "";
+          motorSerialController.text = "";
+          bodySerialController.text = "";
+          observationController.text = "";
+          ubicationController.text = "";
+        });
+
+
       } catch (e) {
         print('Error al crear el documento: $e');
       }
