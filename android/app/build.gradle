@@ -42,6 +42,7 @@ dependencies {
     implementation 'io.flutter:flutter_embedding_debug:1.0.0' // Verifica si necesitas esta línea
     implementation platform('com.google.firebase:firebase-bom:33.5.0') // Usa la última versión de BOM
     implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-analytics' // Si usas Analytics
     // No uses firebase-core, ya que está incluido en el BOM
 }

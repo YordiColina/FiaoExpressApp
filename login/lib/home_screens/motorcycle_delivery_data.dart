@@ -9,7 +9,7 @@ class MotorcycleDeliveryData extends StatefulWidget {
 
 class _MotorcycleDeliveryDataState extends State<MotorcycleDeliveryData> {
   TextEditingController deliveryDateController = TextEditingController();
-  TextEditingController groupController = TextEditingController();
+  TextEditingController plateController = TextEditingController();
   TextEditingController colorController = TextEditingController();
   TextEditingController motorSerialController = TextEditingController();
   TextEditingController bodySerialController = TextEditingController();
@@ -166,7 +166,7 @@ class _MotorcycleDeliveryDataState extends State<MotorcycleDeliveryData> {
           ),
 
           TextField(
-            controller: observationController,
+            controller: plateController,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
@@ -197,7 +197,7 @@ class _MotorcycleDeliveryDataState extends State<MotorcycleDeliveryData> {
             height: 10,
           ),
           TextField(
-
+            controller: observationController ,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
