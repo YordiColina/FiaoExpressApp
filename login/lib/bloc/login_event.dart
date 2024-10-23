@@ -3,15 +3,16 @@ part of 'login_bloc.dart';
 abstract class LoginEvent extends Equatable {
    String email;
    String password;
-   LoginEvent(this.email,this.password);
+   BuildContext context;
+   LoginEvent(this.email,this.password,this.context);
 
   @override
-  List<Object> get props => [email,password]; // Equatable permite comparar objetos
+  List<Object> get props => [email,password, context]; // Equatable permite comparar objetos
 }
 
 class LoginButtonPressed extends LoginEvent {
-  LoginButtonPressed(String email, String password) : super(email, password);
+  LoginButtonPressed(String email, String password, BuildContext context) : super(email, password, context);
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [email, password,context];
 }

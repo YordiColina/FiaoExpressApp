@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:login/login_sreens/password_recovery.dart';
 import '../bloc/login_bloc.dart';
 import '../home_screens/home_screen.dart';
 
@@ -104,18 +105,24 @@ class _LoginBodyState extends State<LoginBody> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.width * 0.38,
-                top: 10,
-              ),
-              child: const Text(
-                "Olvidé mi contraseña",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => const PasswordRecovery()));
+              },
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width * 0.38,
+                  top: 10,
+                ),
+                child: const Text(
+                  "Olvidé mi contraseña",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Dorgan',
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ),
@@ -127,17 +134,13 @@ class _LoginBodyState extends State<LoginBody> {
               height: 60,
               child: ElevatedButton(
                 onPressed: () {
-                  bloc.add(LoginButtonPressed(emailController.text, passwordController.text));
-                  if(state.status == true) {
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => const HomeScreen()));
-                  }
+                  bloc.add(LoginButtonPressed(emailController.text, passwordController.text,context));
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black54,
                     side: BorderSide(color: Colors.white,width: 2)
                 ),
-                child: Text("Iniciar Sesión",style: TextStyle(
+                child: const Text("Iniciar Sesión",style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'Dorgan',
                     fontStyle: FontStyle.italic,
