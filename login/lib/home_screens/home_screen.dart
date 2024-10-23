@@ -1902,7 +1902,7 @@ class _HomeScreenState extends State<HomeScreen> {
         // Agrega el documento a Firestore
         await clientes.doc(identificationController.text).set(
             documentoCompleto);
-
+        ocultarLoading(context);
         print('Documento creado exitosamente');
         mostrarFlushbar(context, toEdit ? "Cliente editado exitosamente": "Cliente creado exitosamente", false);
         setState(() {
@@ -1953,6 +1953,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       // Verifica si se encontró algún documento
       if (querySnapshot.docs.isNotEmpty) {
+        ocultarLoading(context);
         // Itera sobre los documentos encontrados (en este caso, solo debe haber uno)
         for (QueryDocumentSnapshot doc in querySnapshot.docs) {
           // Obtiene los datos del documento completo
@@ -2034,7 +2035,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await clientes.doc(documentId).delete();
       ocultarLoading(context);
       mostrarFlushbar(context, "Cliente eliminado ${deleteController.text} exitosamente", false);
-
+      cleanFields();
       setState(() {
         deleteController.text = "";
       });
