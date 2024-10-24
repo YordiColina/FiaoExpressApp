@@ -21,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 TextEditingController contractNumberController = TextEditingController();
 TextEditingController contractDateController = TextEditingController();
+TextEditingController nextPayDateController = TextEditingController();
 TextEditingController adviserController = TextEditingController();
 TextEditingController nameController = TextEditingController();
 TextEditingController identificationController = TextEditingController();
@@ -32,13 +33,12 @@ TextEditingController brandController = TextEditingController();
 TextEditingController feesController = TextEditingController();
 TextEditingController admBillsController = TextEditingController();
 TextEditingController fleesNumberController = TextEditingController();
-TextEditingController subtotalController = TextEditingController();
+TextEditingController totalfeesnumberController = TextEditingController();
 TextEditingController lateDaysController = TextEditingController();
 TextEditingController latePayController = TextEditingController();
-TextEditingController faseController = TextEditingController();
-TextEditingController nextPayController = TextEditingController();
-TextEditingController nextAwardController = TextEditingController();
-TextEditingController nextdeliverDateController = TextEditingController();
+TextEditingController statusController = TextEditingController();
+TextEditingController feeMonthCost = TextEditingController();
+TextEditingController totalFeeCostController = TextEditingController();
 TextEditingController deliveryDateController = TextEditingController();
 TextEditingController plateController = TextEditingController();
 TextEditingController colorController = TextEditingController();
@@ -47,6 +47,7 @@ TextEditingController bodySerialController = TextEditingController();
 TextEditingController observationController = TextEditingController();
 TextEditingController ubicationController = TextEditingController();
 TextEditingController searchController = TextEditingController();
+TextEditingController planController = TextEditingController();
 TextEditingController deleteController = TextEditingController();
 bool toEdit = false;
 
@@ -179,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             TextField(
-              keyboardType: TextInputType.datetime,
+
               controller: contractDateController,
               style: const TextStyle(
                 fontSize: 18,
@@ -424,6 +425,57 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10,
             ),
+            const SizedBox(
+              height: 10,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Container(
+                alignment: Alignment.centerLeft,
+                child: const Text("Ubicación",style:
+                TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Dorgan',
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w800,
+                ),
+                ),
+              ),
+            ),
+            TextField(
+
+              controller: ubicationController,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                hintText: "Ubicación",
+                hintStyle: const TextStyle(
+                  color: Colors.grey,
+                  fontFamily: 'Dorgan',
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                  borderSide: const BorderSide(
+                    color: Colors.white, // Color del borde
+                    width: 2.0, // Ancho del borde
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(
+              height: 10,
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Container(
@@ -483,14 +535,61 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             Padding(
-              padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.40),
-              child: const Text("Descripción del grupo seleccionado",style: TextStyle(
+              padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.50),
+              child: const Text("Grupo Inscrito",style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
                 fontFamily: 'Dorgan',
                 fontStyle: FontStyle.italic,
               ),
                 maxLines: 2,
+              ),
+            ),
+
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Container(
+                alignment: Alignment.centerLeft,
+                child: const Text("Plan",style:
+                TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Dorgan',
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w800,
+                ),
+                ),
+              ),
+            ),
+
+            TextField(
+              controller: planController,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                hintText: "Plan",
+                hintStyle: const TextStyle(
+                  color: Colors.grey,
+                  fontFamily: 'Dorgan',
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                  borderSide: const BorderSide(
+                    color: Colors.white, // Color del borde
+                    width: 2.0, // Ancho del borde
+                  ),
+                ),
               ),
             ),
 
@@ -595,7 +694,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.only(left: 10),
               child: Container(
                 alignment: Alignment.centerLeft,
-                child: const Text("Marca",style:
+                child: const Text("Marca de la moto",style:
                 TextStyle(
                   color: Colors.black,
                   fontFamily: 'Dorgan',
@@ -617,7 +716,51 @@ class _HomeScreenState extends State<HomeScreen> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                hintText: "Marca",
+                hintText: "Marca de la moto",
+                hintStyle: const TextStyle(
+                  color: Colors.grey,
+                  fontFamily: 'Dorgan',
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                  borderSide: const BorderSide(
+                    color: Colors.white, // Color del borde
+                    width: 2.0, // Ancho del borde
+                  ),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Container(
+                alignment: Alignment.centerLeft,
+                child: const Text("Valor de cuota mensual en \$",style:
+                TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Dorgan',
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w800,
+                ),
+                ),
+              ),
+            ),
+
+            TextField(
+              controller: feeMonthCost,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                hintText: "Valor de cuota mensual en \$",
                 hintStyle: const TextStyle(
                   color: Colors.grey,
                   fontFamily: 'Dorgan',
@@ -637,6 +780,58 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10,
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Container(
+                alignment: Alignment.centerLeft,
+                child: const Text("Nro de cuotas totales",style:
+                TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Dorgan',
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w800,
+                ),
+                ),
+              ),
+            ),
+
+            TextField(
+              keyboardType: TextInputType.number,
+              controller: totalFeeCostController,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                hintText: "Nro de cuotas totales",
+                hintStyle: const TextStyle(
+                  color: Colors.grey,
+                  fontFamily: 'Dorgan',
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                  borderSide: const BorderSide(
+                    color: Colors.white, // Color del borde
+                    width: 2.0, // Ancho del borde
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(
+              height: 10,
+            ),
+
+            const SizedBox(
+              height: 10,
+            ),
           ],
         ),
       ),
@@ -650,7 +845,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Padding(
               padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.40),
-              child: const Text("Inversión inicial",style: TextStyle(
+              child: const Text("Pagos realizados",style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
                 fontFamily: 'Dorgan',
@@ -662,11 +857,12 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10,
             ),
+
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Container(
                 alignment: Alignment.centerLeft,
-                child: const Text("Cuota No",style:
+                child: const Text("Cuota inicial",style:
                 TextStyle(
                   color: Colors.black,
                   fontFamily: 'Dorgan',
@@ -690,7 +886,7 @@ class _HomeScreenState extends State<HomeScreen> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                hintText: "Cuota No",
+                hintText: "Cuota inicial",
                 hintStyle: const TextStyle(
                   color: Colors.grey,
                   fontFamily: 'Dorgan',
@@ -710,6 +906,8 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10,
             ),
+
+
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Container(
@@ -727,7 +925,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             TextField(
-              keyboardType: TextInputType.number,
               controller: admBillsController,
               style: const TextStyle(
                 fontSize: 18,
@@ -754,42 +951,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-
             const SizedBox(
               height: 10,
             ),
 
-          ],
-        ),
-      ),
-              const SizedBox(
-                height: 20,
-              ),
-      Padding(
-        padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width *0.050,
-            right: MediaQuery.of(context).size.width *0.050),
-        child: Column(
-          children: [
-            Padding(
-              padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.40),
-              child: const Text("Pago de cuotas adicionales",style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-                maxLines: 2,
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Container(
                 alignment: Alignment.centerLeft,
-                child: const Text("No de cuotas",style:
+                child: const Text("Nro de cuotas canceladas",style:
                 TextStyle(
                   color: Colors.black,
                   fontFamily: 'Dorgan',
@@ -813,7 +983,7 @@ class _HomeScreenState extends State<HomeScreen> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                hintText: "No de cuotas",
+                hintText: "Nro de cuotas canceladas",
                 hintStyle: const TextStyle(
                   color: Colors.grey,
                   fontFamily: 'Dorgan',
@@ -833,11 +1003,15 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10,
             ),
+            const SizedBox(
+              height: 10,
+            ),
+
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Container(
                 alignment: Alignment.centerLeft,
-                child: const Text("Subtotal",style:
+                child: const Text("Nro de cuotas restantes",style:
                 TextStyle(
                   color: Colors.black,
                   fontFamily: 'Dorgan',
@@ -851,7 +1025,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             TextField(
               keyboardType: TextInputType.number,
-              controller: subtotalController,
+              controller: totalfeesnumberController,
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
@@ -861,7 +1035,7 @@ class _HomeScreenState extends State<HomeScreen> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                hintText: "Subtotal",
+                hintText: "Nro de cuotas restantes",
                 hintStyle: const TextStyle(
                   color: Colors.grey,
                   fontFamily: 'Dorgan',
@@ -881,10 +1055,64 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10,
             ),
+            const SizedBox(
+              height: 10,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Container(
+                alignment: Alignment.centerLeft,
+                child: const Text("Próxima fecha de pago",style:
+                TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Dorgan',
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w800,
+                ),
+                ),
+              ),
+            ),
+
+            TextField(
+              controller: nextPayDateController,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                hintText: "Próxima fecha de pago",
+                hintStyle: const TextStyle(
+                  color: Colors.grey,
+                  fontFamily: 'Dorgan',
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                  borderSide: const BorderSide(
+                    color: Colors.white, // Color del borde
+                    width: 2.0, // Ancho del borde
+                  ),
+                ),
+              ),
+            ),
+
+
+
+            const SizedBox(
+              height: 10,
+            ),
 
           ],
         ),
       ),
+
               const SizedBox(
                 height: 20,
               ),
@@ -1017,7 +1245,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Padding(
               padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.40),
-              child: const Text("Fechas de hitos importantes",style: TextStyle(
+              child: const Text("Estatus en FiaoExpress",style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
                 fontFamily: 'Dorgan',
@@ -1034,7 +1262,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.only(left: 10),
               child: Container(
                 alignment: Alignment.centerLeft,
-                child: const Text("Fase",style:
+                child: const Text("Estatus",style:
                 TextStyle(
                   color: Colors.black,
                   fontFamily: 'Dorgan',
@@ -1047,7 +1275,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             TextField(
-              controller: faseController,
+              controller: statusController,
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
@@ -1057,7 +1285,7 @@ class _HomeScreenState extends State<HomeScreen> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                hintText: "fase",
+                hintText: "Estatus",
                 hintStyle: const TextStyle(
                   color: Colors.grey,
                   fontFamily: 'Dorgan',
@@ -1074,148 +1302,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Fecha próximo pago",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
 
-            TextField(
-              keyboardType: TextInputType.datetime,
-              controller: nextPayController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Fecha próximo pago",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
 
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Fecha próxima adjudicación",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-            TextField(
-              keyboardType: TextInputType.datetime,
-              controller: nextAwardController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Fecha próxima adjudicación",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Fecha próxima entrega",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              keyboardType: TextInputType.datetime,
-              controller: nextdeliverDateController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Fecha próxima entrega",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
 
             const SizedBox(
               height: 10,
@@ -1262,7 +1350,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             TextField(
-              keyboardType: TextInputType.datetime,
+
               controller: deliveryDateController,
               style: const TextStyle(
                 fontSize: 18,
@@ -1528,76 +1616,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-              Padding(
-                padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width *0.050,
-                    right: MediaQuery.of(context).size.width *0.050),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.60),
-                      child: const Text("Ubicación",style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                        fontFamily: 'Dorgan',
-                        fontStyle: FontStyle.italic,
-                      ),
-                      ),
-                    ),
 
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Container(
-                        alignment: Alignment.centerLeft,
-                        child: const Text("Ciudad",style:
-                        TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Dorgan',
-                        fontSize: 12,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w800,
-                        ),
-                        ),
-                      ),
-                    ),
-
-                    TextField(
-                      controller: ubicationController,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        fontFamily: 'Dorgan',
-                        fontStyle: FontStyle.italic,
-                      ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: "Ciudad",
-                        hintStyle: const TextStyle(
-                          color: Colors.grey,
-                          fontFamily: 'Dorgan',
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                          borderSide: const BorderSide(
-                            color: Colors.white, // Color del borde
-                            width: 2.0, // Ancho del borde
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(
-                      height: 10,
-                    ),
-
-                  ],
-                ),
-              ),
               const SizedBox(
                 height: 20,
               ),
@@ -1816,11 +1835,10 @@ class _HomeScreenState extends State<HomeScreen> {
         modelController.text != "" && brandController.text != ""
         && feesController.text != "" && admBillsController.text != "" &&
         fleesNumberController.text != "" &&
-        subtotalController.text != "" && lateDaysController.text != "" &&
-        latePayController.text != "" &&
-        faseController.text != "" && nextPayController.text != "" &&
-        nextAwardController.text != "" &&
-        nextdeliverDateController.text != "" &&
+        totalfeesnumberController.text != "" && lateDaysController.text != "" &&
+        latePayController.text != "" && nextPayDateController.text != "" &&
+        statusController.text != "" && feeMonthCost.text != "" &&
+        totalFeeCostController.text != "" && planController.text != "" &&
         deliveryDateController.text != "" && colorController.text != "" &&
         motorSerialController.text != "" && bodySerialController.text != "" &&
         plateController.text != "" &&
@@ -1838,26 +1856,29 @@ class _HomeScreenState extends State<HomeScreen> {
           'nombre': nameController.text,
           'cédula': identificationController.text,
           'teléfono': phoneController.text,
+          'ubicación' : ubicationController.text,
           'dirección': addressController.text,
         };
 
-        Map<String, dynamic> descripcion_del_grupo_seleccionado = {
+        Map<String, dynamic> grupo_inscrito = {
+          'plan': planController.text,
           'grupo': groupController.text,
           'modelo_de_moto': modelController.text,
-          'marca': brandController.text,
+          'marca_de_moto': brandController.text,
+          'valor_cuota_mensual_en_dolares': feeMonthCost.text,
+          'nro_de_cuotas_totales': totalFeeCostController.text
         };
 
-        Map<String, dynamic> inversionInicial = {
-          'cuota_no': feesController.text,
+        Map<String, dynamic> pagosRealizados = {
+          'cuotaInicial': feesController.text,
           'gastosADM': admBillsController.text,
+          'nro_de_cuotas_canceladas': fleesNumberController.text,
+          'nro_de_cuotas_totales': totalfeesnumberController.text,
+          'proxima_fecha_de_pago':nextPayDateController.text
 
         };
 
-        Map<String, dynamic> pagoDeCuotasAdicionales = {
-          'no_de_cuotas': fleesNumberController.text,
-          'subtotal': subtotalController.text,
 
-        };
 
         Map<String, dynamic> pago_de_morosidad = {
           'díasDeRetraso': lateDaysController.text,
@@ -1865,11 +1886,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
         };
 
-        Map<String, dynamic> fechas_de_hitos_importantes = {
-          'fase': faseController.text,
-          'fecha_proximo_pago': nextPayController.text,
-          'fecha_proxima_adjudicacion': nextAwardController.text,
-          'fecha_proxima_entrega': nextdeliverDateController.text,
+        Map<String, dynamic> estatus_en_fiaoExpress = {
+          'estatus': statusController.text,
+
         };
 
         Map<String, dynamic> datos_de_entrega_de_la_moto = {
@@ -1881,22 +1900,16 @@ class _HomeScreenState extends State<HomeScreen> {
           'observacion': observationController.text
         };
 
-        Map<String, dynamic> ubicacion = {
-          'ciudad': ubicationController.text,
-
-        };
 
         // Combina los dos mapas en un solo documento
         Map<String, dynamic> documentoCompleto = {
           'datosContrato': datosContrato,
           'datosCliente': datosCliente,
-          'descripcion_del_grupo_seleccionado': descripcion_del_grupo_seleccionado,
-          'inversion_inicial': inversionInicial,
-          'pago_de_cuotas_adicionales': pagoDeCuotasAdicionales,
+          'grupo_inscrito': grupo_inscrito,
+          'pagos_realizados': pagosRealizados,
           'pago_de_morosidad': pago_de_morosidad,
-          'fechas_de_hitos_importantes': fechas_de_hitos_importantes,
+          'estatus_en_fiaoExpress': estatus_en_fiaoExpress,
           'datos_de_entrega_de_la_moto': datos_de_entrega_de_la_moto,
-          'ubicacion': ubicacion,
         };
 
         // Agrega el documento a Firestore
@@ -1917,15 +1930,16 @@ class _HomeScreenState extends State<HomeScreen> {
           modelController.text = "";
           brandController.text = "";
           feesController.text = "";
+          nextPayDateController.text = "";
+          planController.text = "";
           admBillsController.text = "";
           fleesNumberController.text = "";
-          subtotalController.text = "";
+          totalfeesnumberController.text = "";
           lateDaysController.text = "";
           latePayController.text = "";
-          faseController.text = "";
-          nextPayController.text = "";
-          nextAwardController.text = "";
-          nextdeliverDateController.text = "";
+          totalFeeCostController.text = "";
+          statusController.text = "";
+          feeMonthCost.text = "";
           deliveryDateController.text = "";
           plateController.text = "";
           colorController.text = "";
@@ -1971,21 +1985,27 @@ class _HomeScreenState extends State<HomeScreen> {
             nameController.text = clientData['nombre'];
             identificationController.text = clientData['cédula'];
             phoneController.text = clientData['teléfono'];
+            ubicationController.text = clientData['ubicación'];
             addressController.text = clientData['dirección'];
 
-            Map<String, dynamic> selectedGroup = datos['descripcion_del_grupo_seleccionado'];
+            Map<String, dynamic> selectedGroup = datos['grupo:inscrito'];
+            planController.text = selectedGroup['plan'];
             groupController.text = selectedGroup['grupo'];
             modelController.text = selectedGroup['modelo_de_moto'];
-            brandController.text = selectedGroup['marca'];
+            brandController.text = selectedGroup['marca_de_moto'];
+            feeMonthCost.text = selectedGroup['valor_cuota_mensual_en_dolares'];
+            totalFeeCostController.text = selectedGroup['nro_de_cuotas_totales'];
 
-            Map<String, dynamic> initialInversion = datos['inversion_inicial'];
-           feesController.text = initialInversion['cuota_no'];
-           admBillsController.text = initialInversion['gastosADM'];
+            Map<String, dynamic> successPayments = datos['pagos_realizados'];
+           feesController.text = successPayments['cuotaInicial'];
+           admBillsController.text = successPayments['gastosADM'];
+           fleesNumberController.text = successPayments['nro_de_cuotas_canceladas'];
+           totalfeesnumberController.text = successPayments['nro_de_cuotas_restantes'];
+           nextPayDateController.text = successPayments["proxima_fecha_de_pago"];
 
 
-            Map<String, dynamic> feesAditionalPay = datos['pago_de_cuotas_adicionales'];
-            fleesNumberController.text = feesAditionalPay['no_de_cuotas'];
-            subtotalController.text = feesAditionalPay['subtotal'];
+
+
 
 
             Map<String, dynamic> latePayment = datos['pago_de_morosidad'];
@@ -1993,11 +2013,9 @@ class _HomeScreenState extends State<HomeScreen> {
             latePayController.text =latePayment['morosidad'];
 
 
-            Map<String, dynamic> importantDates = datos['fechas_de_hitos_importantes'];
-            faseController.text = importantDates['fase'];
-            nextAwardController.text = importantDates['fecha_proxima_adjudicacion'];
-            nextPayController.text = importantDates['fecha_proximo_pago'];
-            nextdeliverDateController.text = importantDates['fecha_proxima_entrega'];
+            Map<String, dynamic> fiaoExpressStatus = datos['estatus_en_fiaoExpress'];
+            statusController.text = fiaoExpressStatus['fase'];
+
 
             Map<String, dynamic> bikeDeliveryData = datos['datos_de_entrega_de_la_moto'];
             colorController.text = bikeDeliveryData['color'];
@@ -2008,7 +2026,7 @@ class _HomeScreenState extends State<HomeScreen> {
            observationController.text = bikeDeliveryData['observacion'];
 
             Map<String, dynamic> ubicationData = datos['ubicacion'];
-            ubicationController.text = ubicationData['ciudad'];
+
 
             searchController.text = "";
             mostrarFlushbar(context, "Cliente encontrado", false);
@@ -2062,16 +2080,17 @@ class _HomeScreenState extends State<HomeScreen> {
       feesController.text = "";
       admBillsController.text = "";
       fleesNumberController.text = "";
-      subtotalController.text = "";
+      planController.text = "";
+      totalfeesnumberController.text = "";
       lateDaysController.text = "";
       latePayController.text = "";
-      faseController.text = "";
-      nextPayController.text = "";
-      nextAwardController.text = "";
-      nextdeliverDateController.text = "";
+      statusController.text = "";
+      totalFeeCostController.text = "";
       deliveryDateController.text = "";
       plateController.text = "";
+      feeMonthCost.text = "";
       colorController.text = "";
+      nextPayDateController.text = "";
       motorSerialController.text = "";
       bodySerialController.text = "";
       observationController.text = "";
