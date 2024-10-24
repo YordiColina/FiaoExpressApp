@@ -1873,7 +1873,7 @@ class _HomeScreenState extends State<HomeScreen> {
           'cuotaInicial': feesController.text,
           'gastosADM': admBillsController.text,
           'nro_de_cuotas_canceladas': fleesNumberController.text,
-          'nro_de_cuotas_totales': totalfeesnumberController.text,
+          'nro_de_cuotas_restantes': totalfeesnumberController.text,
           'proxima_fecha_de_pago':nextPayDateController.text
 
         };
@@ -1988,7 +1988,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ubicationController.text = clientData['ubicación'];
             addressController.text = clientData['dirección'];
 
-            Map<String, dynamic> selectedGroup = datos['grupo:inscrito'];
+            Map<String, dynamic> selectedGroup = datos['grupo_inscrito'];
             planController.text = selectedGroup['plan'];
             groupController.text = selectedGroup['grupo'];
             modelController.text = selectedGroup['modelo_de_moto'];
@@ -2003,18 +2003,13 @@ class _HomeScreenState extends State<HomeScreen> {
            totalfeesnumberController.text = successPayments['nro_de_cuotas_restantes'];
            nextPayDateController.text = successPayments["proxima_fecha_de_pago"];
 
-
-
-
-
-
             Map<String, dynamic> latePayment = datos['pago_de_morosidad'];
             lateDaysController.text = latePayment['díasDeRetraso'];
             latePayController.text =latePayment['morosidad'];
 
 
             Map<String, dynamic> fiaoExpressStatus = datos['estatus_en_fiaoExpress'];
-            statusController.text = fiaoExpressStatus['fase'];
+            statusController.text = fiaoExpressStatus['estatus'];
 
 
             Map<String, dynamic> bikeDeliveryData = datos['datos_de_entrega_de_la_moto'];
@@ -2025,7 +2020,7 @@ class _HomeScreenState extends State<HomeScreen> {
             plateController.text = bikeDeliveryData['placa'];
            observationController.text = bikeDeliveryData['observacion'];
 
-            Map<String, dynamic> ubicationData = datos['ubicacion'];
+
 
 
             searchController.text = "";
