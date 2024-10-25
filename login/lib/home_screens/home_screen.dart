@@ -2020,9 +2020,6 @@ class _HomeScreenState extends State<HomeScreen> {
             plateController.text = bikeDeliveryData['placa'];
            observationController.text = bikeDeliveryData['observacion'];
 
-
-
-
             searchController.text = "";
             mostrarFlushbar(context, "Cliente encontrado", false);
           });
