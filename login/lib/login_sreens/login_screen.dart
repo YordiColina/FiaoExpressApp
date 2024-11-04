@@ -14,7 +14,7 @@ class _LoginscreenState extends State<Loginscreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          color: Colors.black
+          color: Colors.white
         ),
         child: Center(
           child: SingleChildScrollView(
@@ -39,7 +39,7 @@ class _LoginscreenState extends State<Loginscreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text("FIAO",style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontSize: 32,
                             fontStyle: FontStyle.italic,
                             fontWeight: FontWeight.w800,
@@ -47,7 +47,7 @@ class _LoginscreenState extends State<Loginscreen> {
                           ),
                           ),
                           Text("EXPRESS",style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontSize: 32,
                             fontStyle: FontStyle.italic,
                             fontWeight: FontWeight.w400,

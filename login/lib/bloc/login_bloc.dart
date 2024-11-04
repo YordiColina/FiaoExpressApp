@@ -45,6 +45,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
+  String getCurrentUserEmail() {
+    return _auth.currentUser?.email ?? "";
+  }
+
 
   void mostrarFlushbar(BuildContext context, String message, bool fail) {
     Flushbar(

@@ -14,27 +14,64 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Recuperar Contraseña'),
+        backgroundColor: Colors.white,
+        title: Text('Recuperar contraseña',  style: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.w700,
+          fontFamily: 'Dorgan',
+          fontStyle: FontStyle.italic,
+        ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(labelText: 'Correo electrónico'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                recuperarContrasena(context, _emailController.text);
-                Navigator.pushReplacementNamed(context, '/login');
-              },
-              child: Text('Enviar correo de recuperación'),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                    hintText: 'Correo electrónico' ,
+                    hintStyle: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Dorgan',
+                      fontStyle: FontStyle.italic,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: const BorderSide(
+                        color: Colors.black, // Color del borde
+                        width: 2.0, // Ancho del borde
+                      ),
+                    )
+
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  recuperarContrasena(context, _emailController.text);
+                  Navigator.pushReplacementNamed(context, '/login');
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    side: const BorderSide(color: Colors.black,width: 2)
+                ),
+
+                child: const Text('Enviar correo de recuperación',   style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Dorgan',
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w600,
+                )),
+              ),
+            ],
+          ),
         ),
       ),
     );

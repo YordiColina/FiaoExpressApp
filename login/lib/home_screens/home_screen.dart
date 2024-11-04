@@ -2,15 +2,8 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:login/home_screens/client_data.dart';
-import 'package:login/home_screens/contract_data.dart';
-import 'package:login/home_screens/importan_milestones_dates.dart';
-import 'package:login/home_screens/initial_invertion.dart';
-import 'package:login/home_screens/motorcycle_delivery_data.dart';
-import 'package:login/home_screens/payment_additional_fees.dart';
-import 'package:login/home_screens/selection_group_description.dart';
-
-import 'late_payment.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:login/bloc/login_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,6 +11,7 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+LoginBloc bloc = LoginBloc();
 
 TextEditingController contractNumberController = TextEditingController();
 TextEditingController contractDateController = TextEditingController();
@@ -49,1798 +43,2094 @@ TextEditingController ubicationController = TextEditingController();
 TextEditingController searchController = TextEditingController();
 TextEditingController planController = TextEditingController();
 TextEditingController deleteController = TextEditingController();
+TextEditingController positionListController = TextEditingController();
+TextEditingController numberOfListController = TextEditingController();
 bool toEdit = false;
+String auxTotalFees = fleesNumberController.text;
+String auxPayFees = totalFeeCostController.text;
+int totalFees = 0;
+int payFees = 0;
+double progressBar = 0.0;
+bool editable = true;
+bool readyToDelivery = false;
+String? selectedOption;
+List<String> options = ['Ahorro planificado', 'Entrega inmediata',];
+String userEmail = "";
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  Widget build(BuildContext context) {
-    return  Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).size.width *0.15 ),
-        child:  SingleChildScrollView(
-          child: Column(
-            children: [
-          Padding(
-          padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width *0.050,
-            right: MediaQuery.of(context).size.width *0.050),
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: () {
-                signOut(context);
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  child: const Text("Cerrar sesión",style:
-                  TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Dorgan',
-                    fontSize: 15,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w800,
-                  ),
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 20,
-            ),
-            const Center(
-              child: Text("Registro de Clientes", style:TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.40),
-              child: const Text("Datos del contrato",style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Contrato No",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              keyboardType: TextInputType.number,
-              controller: contractNumberController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Contrato No",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Fecha de contrato",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-
-              controller: contractDateController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Fecha contrato",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Asesor",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-            TextField(
-              controller: adviserController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Asesor",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-          ],
-        ),
-      ),
-              const SizedBox(
-                height: 20,
-              ),
-      Padding(
-        padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width *0.050,
-            right: MediaQuery.of(context).size.width *0.050),
-        child: Column(
-          children: [
-            Padding(
-              padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.40),
-              child: const Text("Datos del cliente",style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Nombre",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              controller: nameController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Nombre",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Cédula",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              keyboardType: TextInputType.number,
-              controller: identificationController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Cédula",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Teléfono",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-            TextField(
-              keyboardType: TextInputType.phone,
-              controller: phoneController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Teléfono",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Ubicación",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-            TextField(
-
-              controller: ubicationController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Ubicación",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Dirección",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              controller: addressController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Dirección",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-          ],
-        ),
-      ),
-              const SizedBox(
-                height: 20,
-              ),
-      Padding(
-        padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width *0.050,
-            right: MediaQuery.of(context).size.width *0.050),
-        child: Column(
-          children: [
-            Padding(
-              padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.50),
-              child: const Text("Grupo Inscrito",style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-                maxLines: 2,
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Plan",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              controller: planController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Plan",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Grupo",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              controller: groupController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Grupo",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Modelo de moto",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              controller: modelController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Modelo de moto",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Marca de la moto",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-            TextField(
-              controller: brandController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Marca de la moto",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Valor de cuota mensual en \$",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              controller: feeMonthCost,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Valor de cuota mensual en \$",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Nro de cuotas totales",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              keyboardType: TextInputType.number,
-              controller: totalFeeCostController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Nro de cuotas totales",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-          ],
-        ),
-      ),
-              const SizedBox(
-                height: 20,
-              ),
-      Padding(
-        padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width *0.050,
-            right: MediaQuery.of(context).size.width *0.050),
-        child: Column(
-          children: [
-            Padding(
-              padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.40),
-              child: const Text("Pagos realizados",style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Cuota inicial",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              keyboardType: TextInputType.number,
-              controller: feesController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Cuota inicial",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-
-
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("GastosADM",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              controller: admBillsController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Gastos ADM",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Nro de cuotas canceladas",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              keyboardType: TextInputType.number,
-              controller: fleesNumberController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Nro de cuotas canceladas",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Nro de cuotas restantes",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              keyboardType: TextInputType.number,
-              controller: totalfeesnumberController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Nro de cuotas restantes",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Próxima fecha de pago",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              controller: nextPayDateController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Próxima fecha de pago",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-
-
-            const SizedBox(
-              height: 10,
-            ),
-
-          ],
-        ),
-      ),
-
-              const SizedBox(
-                height: 20,
-              ),
-      Padding(
-        padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width *0.050,
-            right: MediaQuery.of(context).size.width *0.050),
-        child: Column(
-          children: [
-            Padding(
-              padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.40),
-              child: const Text("Pago de morosidad",style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Días de retraso",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              keyboardType: TextInputType.number,
-              controller: lateDaysController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Días de retraso",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Morosidad",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              keyboardType: TextInputType.number,
-              controller: latePayController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Morosidad",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-
-          ],
-        ),
-      ),
-              const SizedBox(
-                height: 20,
-              ),
-      Padding(
-        padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width *0.050,
-            right: MediaQuery.of(context).size.width *0.050),
-        child: Column(
-          children: [
-            Padding(
-              padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.40),
-              child: const Text("Estatus en FiaoExpress",style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-                maxLines: 2,
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Estatus",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              controller: statusController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Estatus",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-
-
-
-            const SizedBox(
-              height: 10,
-            ),
-          ],
-        ),
-      ),
-              const SizedBox(
-                height: 20,
-              ),
-      Padding(
-        padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width *0.050,
-            right: MediaQuery.of(context).size.width *0.050),
-        child: Column(
-          children: [
-            Padding(
-              padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.40),
-              child: const Text("Datos de entrega de la moto",style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-                maxLines: 2,
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Fecha de entrega",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-            TextField(
-
-              controller: deliveryDateController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Fecha de entrega",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Color",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              controller: colorController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Color",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Serial motor",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-
-            TextField(
-              controller: motorSerialController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Serial motor",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Serial carrorería",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-            TextField(
-              controller: bodySerialController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Serial carrocería",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Placa",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-            TextField(
-              controller: plateController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Placa",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text("Observación",style:
-                TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-                ),
-              ),
-            ),
-            TextField(
-              controller: observationController ,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Observación",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-          ],
-        ),
-      ),
-
-              const SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                  crearDocumentoEnFirestore();
-              },
-                  style:  ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[300]
-                  ),
-                  child: const Text(" Crear cliente",style:
-                  TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Dorgan',
-                    fontSize: 20,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w800,
-                  ))),
-              const SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                  cleanFields();
-                  },
-                  style:  ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300]
-                  ),
-                  child: const Text(" Limpiar campos",style:
-                  TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Dorgan',
-                    fontSize: 20,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w800,
-                  ))),
-
-              const SizedBox(
-                height: 10,
-              ),
-
-              ElevatedButton(
-                  onPressed: () {
-                  obtenerYGuardarDatos(searchController.text);
-                  },
-                  style:  ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300]
-                  ),
-                  child: const Text(" Consultar cliente",style:
-                  TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Dorgan',
-                    fontSize: 20,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w800,
-                  ))),
-
-              const SizedBox(
-                height: 10,
-              ),
-
-              Padding(
-                padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width *0.050, right: MediaQuery.of(context).size.width *0.050 ),
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  controller: searchController,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    fontFamily: 'Dorgan',
-                    fontStyle: FontStyle.italic,
-                  ),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: "Ingresa la cédula de identidad ",
-                    hintStyle: const TextStyle(
-                      color: Colors.grey,
-                      fontFamily: 'Dorgan',
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                      borderSide: const BorderSide(
-                        color: Colors.white, // Color del borde
-                        width: 2.0, // Ancho del borde
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: const Text("Si quieres editar, primero consulta el cliente ingresando su cédula en el campo y luego presiona el botón de 'Consultar cliente', procede a editar los campos que desees y guarda los cambios en el botón 'Editar cliente' ",style:
-                  TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Dorgan',
-                    fontSize: 14,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w800,
-                  ),
-                    maxLines: 5,
-                  ),
-                ),
-              ),
-               const SizedBox(
-                 height: 10,
-               ),
-              ElevatedButton(
-                  onPressed: () {
-                    crearDocumentoEnFirestore();
-                    setState(() {
-                      toEdit = true;
-                    });
-                  },
-                  style:  ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300]
-                  ),
-                  child: const Text("Editar cliente",style:
-                  TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Dorgan',
-                    fontSize: 20,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w800,
-                  ))),
-
-              const SizedBox(
-                height: 10,
-              ),
-
-              ElevatedButton(
-                  onPressed: () {
-                   eliminarDocumentoPorId(deleteController.text);
-                  },
-                  style:  ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300]
-                  ),
-                  child: const Text(" Eliminar cliente",style:
-                  TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Dorgan',
-                    fontSize: 20,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w800,
-                  ))),
-
-              const SizedBox(
-                height: 10,
-              ),
-
-              Padding(
-                padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width *0.050, right: MediaQuery.of(context).size.width *0.050 ),
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  controller: deleteController,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    fontFamily: 'Dorgan',
-                    fontStyle: FontStyle.italic,
-                  ),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: "Ingresa la cédula del cliente a eliminar ",
-                    hintStyle: const TextStyle(
-                      color: Colors.grey,
-                      fontFamily: 'Dorgan',
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-                      borderSide: const BorderSide(
-                        color: Colors.white, // Color del borde
-                        width: 2.0, // Ancho del borde
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(
-                height: 30,
-              ),
-
-
-
-
-            ],
-          ),
-        ),
-      )
-    );
+  void initState() {
+    userEmail = bloc.getCurrentUserEmail();
+    print(userEmail);
+    if(userEmail != "fiaoexpressapp@gmail.com") {
+      editable = false;
+    }
+    super.initState();
   }
-  Future<void> crearDocumentoEnFirestore(
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        body: Padding(
+          padding:
+              EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.15),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.050,
+                      right: MediaQuery.of(context).size.width * 0.050),
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          signOut(context);
+                        },
+                        child: Padding(
+                          padding:  EdgeInsets.only(left: 10),
+                          child: Container(
+                            alignment: Alignment.centerRight,
+                            child:  Text(
+                            editable != false ? "Cerrar sesión" : "Atrás",
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Dorgan',
+                                fontSize: 15,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Text(
+                         editable != false ? "Registro de Clientes" : "Consultar información",
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
 
-  ) async {
+                      Visibility(
+                        visible: !editable,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width * 0.050,
+                              right: MediaQuery.of(context).size.width * 0.050),
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            controller: searchController,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              fontFamily: 'Dorgan',
+                              fontStyle: FontStyle.italic,
+                            ),
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintText: "Ingresa la cédula de identidad ",
+                              hintStyle: const TextStyle(
+                                color: Colors.grey,
+                                fontFamily: 'Dorgan',
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                // Esquinas redondeadas
+                                borderSide: const BorderSide(
+                                  color: Colors.white, // Color del borde
+                                  width: 2.0, // Ancho del borde
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+
+                      Visibility(
+                        visible: !editable,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              obtenerYGuardarDatos(searchController.text);
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey[300]),
+                            child: const Text("Consultar",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'Dorgan',
+                                  fontSize: 20,
+                                  fontStyle: FontStyle.italic,
+                                  fontWeight: FontWeight.w800,
+                                ))),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.40),
+                        child: const Text(
+                          "Datos del contrato",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Contrato No",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        keyboardType: TextInputType.number,
+                        controller: contractNumberController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Contrato No",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Fecha de contrato",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: contractDateController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Fecha contrato",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Asesor",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: adviserController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Asesor",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.050,
+                      right: MediaQuery.of(context).size.width * 0.050),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.40),
+                        child: const Text(
+                          "Datos del cliente",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Nombre",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: nameController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Nombre",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Cédula",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        keyboardType: TextInputType.number,
+                        controller: identificationController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Cédula",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Teléfono",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        keyboardType: TextInputType.phone,
+                        controller: phoneController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Teléfono",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Ubicación",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: ubicationController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Ubicación",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Dirección",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: addressController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Dirección",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.050,
+                      right: MediaQuery.of(context).size.width * 0.050),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.50),
+                        child: const Text(
+                          "Grupo Inscrito",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                          ),
+                          maxLines: 2,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Plan",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 60,
+                        child: InputDecorator(
+                          decoration: const InputDecoration(border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20))
+                          )),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: selectedOption,
+                              dropdownColor: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              hint: const Text("Selecciona un plan", style: TextStyle(
+                                color: Colors.grey,
+                                fontFamily: 'Dorgan',
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w400,
+                              ),),
+                              items: options.map((String option) {
+                                return DropdownMenuItem<String>(
+                                  value: option,
+                                  child: Text(option),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  planController.text = newValue  ?? "";
+                                  selectedOption = newValue;
+                                  if(selectedOption == "Ahorro planificado") {
+                                    totalFeeCostController.text = "24";
+                                  } else {
+                                    totalFeeCostController.text = "8";
+                                    readyToDelivery = true;
+                                  }
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Grupo",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: groupController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Grupo",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Nro de lista",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: numberOfListController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Nro de lista",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Posición en la lista",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: positionListController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Posición en la lista",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Modelo de moto",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: modelController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Modelo de moto",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Marca de la moto",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: brandController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Marca de la moto",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Valor de cuota mensual en \$",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: feeMonthCost,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Valor de cuota mensual en \$",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Nro de cuotas totales",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        keyboardType: TextInputType.number,
+                        controller: totalFeeCostController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Nro de cuotas totales",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            auxTotalFees = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.050,
+                      right: MediaQuery.of(context).size.width * 0.050),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.40),
+                        child: const Text(
+                          "Pagos realizados",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Cuota inicial",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        keyboardType: TextInputType.number,
+                        controller: feesController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Cuota inicial",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "GastosADM",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: admBillsController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Gastos ADM",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Nro de cuotas canceladas",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        keyboardType: TextInputType.number,
+                        controller: fleesNumberController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Nro de cuotas canceladas",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            auxPayFees = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Nro de cuotas restantes",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        keyboardType: TextInputType.number,
+                        controller: totalfeesnumberController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Nro de cuotas restantes",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Próxima fecha de pago",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: nextPayDateController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Próxima fecha de pago",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child:  Text(
+                            "Progreso del pago $payFees/$totalFees cuotas",
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        height: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(20)
+                          ),
+                          child: LinearProgressIndicator(
+                              value: progressBar,
+                            backgroundColor: Colors.white,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                            borderRadius: BorderRadius.circular(20),
+                          )
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.050,
+                      right: MediaQuery.of(context).size.width * 0.050),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.40),
+                        child: const Text(
+                          "Pago de morosidad",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Días de retraso",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        keyboardType: TextInputType.number,
+                        controller: lateDaysController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Días de retraso",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Morosidad",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        keyboardType: TextInputType.number,
+                        controller: latePayController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Morosidad",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.050,
+                      right: MediaQuery.of(context).size.width * 0.050),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.40),
+                        child: const Text(
+                          "Estatus en FiaoExpress",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                          ),
+                          maxLines: 2,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Estatus",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        readOnly: !editable,
+                        controller: statusController,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: "Estatus",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            // Esquinas redondeadas
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Visibility(
+                  visible: readyToDelivery && !editable,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width * 0.050,
+                        right: MediaQuery.of(context).size.width * 0.050),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                              right: MediaQuery.of(context).size.width * 0.40),
+                          child: const Text(
+                            "Datos de entrega de la moto",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                              fontFamily: 'Dorgan',
+                              fontStyle: FontStyle.italic,
+                            ),
+                            maxLines: 2,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: const Text(
+                              "Fecha de entrega",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Dorgan',
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ),
+                        TextField(
+                          readOnly: !editable,
+                          controller: deliveryDateController,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                          ),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: "Fecha de entrega",
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'Dorgan',
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              // Esquinas redondeadas
+                              borderSide: const BorderSide(
+                                color: Colors.white, // Color del borde
+                                width: 2.0, // Ancho del borde
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: const Text(
+                              "Color",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Dorgan',
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ),
+                        TextField(
+                          readOnly: !editable,
+                          controller: colorController,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                          ),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: "Color",
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'Dorgan',
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              // Esquinas redondeadas
+                              borderSide: const BorderSide(
+                                color: Colors.white, // Color del borde
+                                width: 2.0, // Ancho del borde
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: const Text(
+                              "Serial motor",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Dorgan',
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ),
+                        TextField(
+                          readOnly: !editable,
+                          controller: motorSerialController,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                          ),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: "Serial motor",
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'Dorgan',
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              // Esquinas redondeadas
+                              borderSide: const BorderSide(
+                                color: Colors.white, // Color del borde
+                                width: 2.0, // Ancho del borde
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: const Text(
+                              "Serial carrorería",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Dorgan',
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ),
+                        TextField(
+                          readOnly: !editable,
+                          controller: bodySerialController,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                          ),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: "Serial carrocería",
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'Dorgan',
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              // Esquinas redondeadas
+                              borderSide: const BorderSide(
+                                color: Colors.white, // Color del borde
+                                width: 2.0, // Ancho del borde
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: const Text(
+                              "Placa",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Dorgan',
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ),
+                        TextField(
+                          readOnly: !editable,
+                          controller: plateController,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                          ),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: "Placa",
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'Dorgan',
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              // Esquinas redondeadas
+                              borderSide: const BorderSide(
+                                color: Colors.white, // Color del borde
+                                width: 2.0, // Ancho del borde
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: const Text(
+                              "Observación",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Dorgan',
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ),
+                        TextField(
+                          readOnly: !editable,
+                          controller: observationController,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'Dorgan',
+                            fontStyle: FontStyle.italic,
+                          ),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: "Observación",
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'Dorgan',
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              // Esquinas redondeadas
+                              borderSide: const BorderSide(
+                                color: Colors.white, // Color del borde
+                                width: 2.0, // Ancho del borde
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Visibility(
+                  visible: editable,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        crearDocumentoEnFirestore();
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[300]),
+                      child: const Text(" Crear cliente",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Dorgan',
+                            fontSize: 20,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w800,
+                          ))),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Visibility(
+                  visible: editable,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        cleanFields();
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[300]),
+                      child: const Text(" Limpiar campos",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Dorgan',
+                            fontSize: 20,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w800,
+                          ))),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Visibility(
+                  visible: editable,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        obtenerYGuardarDatos(searchController.text);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[300]),
+                      child: const Text(" Consultar cliente",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Dorgan',
+                            fontSize: 20,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w800,
+                          ))),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Visibility(
+                  visible: editable,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width * 0.050,
+                        right: MediaQuery.of(context).size.width * 0.050),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: searchController,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        fontFamily: 'Dorgan',
+                        fontStyle: FontStyle.italic,
+                      ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: "Ingresa la cédula de identidad ",
+                        hintStyle: const TextStyle(
+                          color: Colors.grey,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          // Esquinas redondeadas
+                          borderSide: const BorderSide(
+                            color: Colors.white, // Color del borde
+                            width: 2.0, // Ancho del borde
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Visibility(
+                  visible: editable,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        "Si quieres editar, primero consulta el cliente ingresando su cédula en el campo y luego presiona el botón de 'Consultar cliente', procede a editar los campos que desees y guarda los cambios en el botón 'Editar cliente' ",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Dorgan',
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w800,
+                        ),
+                        maxLines: 5,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Visibility(
+                  visible: editable,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        crearDocumentoEnFirestore();
+                        setState(() {
+                          toEdit = true;
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[300]),
+                      child: const Text("Editar cliente",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Dorgan',
+                            fontSize: 20,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w800,
+                          ))),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Visibility(
+                  visible: editable,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        eliminarDocumentoPorId(deleteController.text);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[300]),
+                      child: const Text(" Eliminar cliente",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Dorgan',
+                            fontSize: 20,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w800,
+                          ))),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Visibility(
+                  visible: editable,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width * 0.050,
+                        right: MediaQuery.of(context).size.width * 0.050),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: deleteController,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        fontFamily: 'Dorgan',
+                        fontStyle: FontStyle.italic,
+                      ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: "Ingresa la cédula del cliente a eliminar ",
+                        hintStyle: const TextStyle(
+                          color: Colors.grey,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          // Esquinas redondeadas
+                          borderSide: const BorderSide(
+                            color: Colors.white, // Color del borde
+                            width: 2.0, // Ancho del borde
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+
+  Future<void> crearDocumentoEnFirestore() async {
     mostrarLoading(context);
     // Referencia a la colección donde se almacenarán los documentos
-    CollectionReference clientes = FirebaseFirestore.instance.collection(
-        'clientes');
+    CollectionReference clientes =
+        FirebaseFirestore.instance.collection('clientes');
     if (contractNumberController.text != "" &&
-        contractDateController.text != "" && adviserController.text != ""
-        && nameController.text != "" && identificationController.text != "" &&
+        contractDateController.text != "" &&
+        adviserController.text != "" &&
+        nameController.text != "" &&
+        identificationController.text != "" &&
         phoneController.text != "" &&
-        addressController.text != "" && groupController.text != "" &&
-        modelController.text != "" && brandController.text != ""
-        && feesController.text != "" && admBillsController.text != "" &&
+        addressController.text != "" &&
+        groupController.text != "" &&
+        modelController.text != "" &&
+        brandController.text != "" &&
+        feesController.text != "" &&
+        admBillsController.text != "" &&
         fleesNumberController.text != "" &&
-        totalfeesnumberController.text != "" && lateDaysController.text != "" &&
-        latePayController.text != "" && nextPayDateController.text != "" &&
-        statusController.text != "" && feeMonthCost.text != "" &&
-        totalFeeCostController.text != "" && planController.text != "" &&
-        deliveryDateController.text != "" && colorController.text != "" &&
-        motorSerialController.text != "" && bodySerialController.text != "" &&
+        totalfeesnumberController.text != "" &&
+        lateDaysController.text != "" &&
+        latePayController.text != "" &&
+        nextPayDateController.text != "" &&
+        statusController.text != "" &&
+        feeMonthCost.text != "" &&
+        totalFeeCostController.text != "" &&
+        deliveryDateController.text != "" &&
+        colorController.text != "" &&
+        motorSerialController.text != "" &&
+        bodySerialController.text != "" &&
         plateController.text != "" &&
         observationController.text != "") {
       try {
@@ -1856,13 +2146,15 @@ class _HomeScreenState extends State<HomeScreen> {
           'nombre': nameController.text,
           'cédula': identificationController.text,
           'teléfono': phoneController.text,
-          'ubicación' : ubicationController.text,
+          'ubicación': ubicationController.text,
           'dirección': addressController.text,
         };
 
         Map<String, dynamic> grupo_inscrito = {
           'plan': planController.text,
           'grupo': groupController.text,
+          'nro_de_lista': numberOfListController.text,
+          'posicion_en_la_lista': positionListController.text,
           'modelo_de_moto': modelController.text,
           'marca_de_moto': brandController.text,
           'valor_cuota_mensual_en_dolares': feeMonthCost.text,
@@ -1874,21 +2166,16 @@ class _HomeScreenState extends State<HomeScreen> {
           'gastosADM': admBillsController.text,
           'nro_de_cuotas_canceladas': fleesNumberController.text,
           'nro_de_cuotas_restantes': totalfeesnumberController.text,
-          'proxima_fecha_de_pago':nextPayDateController.text
-
+          'proxima_fecha_de_pago': nextPayDateController.text
         };
-
-
 
         Map<String, dynamic> pago_de_morosidad = {
           'díasDeRetraso': lateDaysController.text,
           'morosidad': latePayController.text,
-
         };
 
         Map<String, dynamic> estatus_en_fiaoExpress = {
           'estatus': statusController.text,
-
         };
 
         Map<String, dynamic> datos_de_entrega_de_la_moto = {
@@ -1899,7 +2186,6 @@ class _HomeScreenState extends State<HomeScreen> {
           'placa': plateController.text,
           'observacion': observationController.text
         };
-
 
         // Combina los dos mapas en un solo documento
         Map<String, dynamic> documentoCompleto = {
@@ -1913,11 +2199,17 @@ class _HomeScreenState extends State<HomeScreen> {
         };
 
         // Agrega el documento a Firestore
-        await clientes.doc(identificationController.text).set(
-            documentoCompleto);
+        await clientes
+            .doc(identificationController.text)
+            .set(documentoCompleto);
         ocultarLoading(context);
         print('Documento creado exitosamente');
-        mostrarFlushbar(context, toEdit ? "Cliente editado exitosamente": "Cliente creado exitosamente", false);
+        mostrarFlushbar(
+            context,
+            toEdit
+                ? "Cliente editado exitosamente"
+                : "Cliente creado exitosamente",
+            false);
         setState(() {
           contractNumberController.text = "";
           contractDateController.text = "";
@@ -1947,23 +2239,29 @@ class _HomeScreenState extends State<HomeScreen> {
           bodySerialController.text = "";
           observationController.text = "";
           ubicationController.text = "";
+          positionListController.text = "";
+          numberOfListController.text = "";
         });
-
-
       } catch (e) {
         ocultarLoading(context);
         mostrarFlushbar(context, "Error al crear cliente", true);
         print('Error al crear el documento: $e');
       }
+    } else {
+      ocultarLoading(context);
+      mostrarFlushbar(context, "Compruebe que los campos esten completos", true);
     }
   }
 
   Future<void> obtenerYGuardarDatos(String contratoNo) async {
-    CollectionReference clientes = FirebaseFirestore.instance.collection('clientes');
-   mostrarLoading(context);
+    CollectionReference clientes =
+        FirebaseFirestore.instance.collection('clientes');
+    mostrarLoading(context);
     try {
       // Realiza la consulta para obtener el documento con el número de contrato
-      QuerySnapshot querySnapshot = await clientes.where('datosCliente.cédula', isEqualTo: searchController.text).get();
+      QuerySnapshot querySnapshot = await clientes
+          .where('datosCliente.cédula', isEqualTo: searchController.text)
+          .get();
 
       // Verifica si se encontró algún documento
       if (querySnapshot.docs.isNotEmpty) {
@@ -1978,7 +2276,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Map<String, dynamic> contractData = datos['datosContrato'];
             contractNumberController.text = contractData['contratoNo'];
             contractDateController.text = contractData['fechaContrato'];
-           adviserController.text = contractData['asesor'];
+            adviserController.text = contractData['asesor'];
 
             // Extrae los datos del cliente
             Map<String, dynamic> clientData = datos['datosCliente'];
@@ -1990,35 +2288,52 @@ class _HomeScreenState extends State<HomeScreen> {
 
             Map<String, dynamic> selectedGroup = datos['grupo_inscrito'];
             planController.text = selectedGroup['plan'];
+            selectedOption = selectedGroup['plan'];
             groupController.text = selectedGroup['grupo'];
+            numberOfListController.text = selectedGroup['nro_de_lista'];
+            positionListController.text = selectedGroup['posicion_en_la_lista'];
             modelController.text = selectedGroup['modelo_de_moto'];
             brandController.text = selectedGroup['marca_de_moto'];
             feeMonthCost.text = selectedGroup['valor_cuota_mensual_en_dolares'];
-            totalFeeCostController.text = selectedGroup['nro_de_cuotas_totales'];
+            totalFeeCostController.text =
+                selectedGroup['nro_de_cuotas_totales'];
+
+
 
             Map<String, dynamic> successPayments = datos['pagos_realizados'];
-           feesController.text = successPayments['cuotaInicial'];
-           admBillsController.text = successPayments['gastosADM'];
-           fleesNumberController.text = successPayments['nro_de_cuotas_canceladas'];
-           totalfeesnumberController.text = successPayments['nro_de_cuotas_restantes'];
-           nextPayDateController.text = successPayments["proxima_fecha_de_pago"];
+            feesController.text = successPayments['cuotaInicial'];
+            admBillsController.text = successPayments['gastosADM'];
+            fleesNumberController.text =
+                successPayments['nro_de_cuotas_canceladas'];
+            totalfeesnumberController.text =
+                successPayments['nro_de_cuotas_restantes'];
+            nextPayDateController.text =
+                successPayments["proxima_fecha_de_pago"];
 
             Map<String, dynamic> latePayment = datos['pago_de_morosidad'];
             lateDaysController.text = latePayment['díasDeRetraso'];
-            latePayController.text =latePayment['morosidad'];
+            latePayController.text = latePayment['morosidad'];
 
-
-            Map<String, dynamic> fiaoExpressStatus = datos['estatus_en_fiaoExpress'];
+            Map<String, dynamic> fiaoExpressStatus =
+                datos['estatus_en_fiaoExpress'];
             statusController.text = fiaoExpressStatus['estatus'];
 
-
-            Map<String, dynamic> bikeDeliveryData = datos['datos_de_entrega_de_la_moto'];
+            Map<String, dynamic> bikeDeliveryData =
+                datos['datos_de_entrega_de_la_moto'];
             colorController.text = bikeDeliveryData['color'];
             deliveryDateController.text = bikeDeliveryData['fecha_de_entrega'];
             motorSerialController.text = bikeDeliveryData['serialMotor'];
             bodySerialController.text = bikeDeliveryData['serialCarroceria'];
             plateController.text = bikeDeliveryData['placa'];
-           observationController.text = bikeDeliveryData['observacion'];
+            observationController.text = bikeDeliveryData['observacion'];
+
+            setState(() {
+              auxPayFees = successPayments['nro_de_cuotas_canceladas'];
+              auxTotalFees = selectedGroup['nro_de_cuotas_totales'];
+              payFees = int.parse(auxPayFees);
+              totalFees = int.parse(auxTotalFees);
+              progressBar = payFees/ totalFees;
+            });
 
             searchController.text = "";
             mostrarFlushbar(context, "Cliente encontrado", false);
@@ -2027,7 +2342,8 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         ocultarLoading(context);
         mostrarFlushbar(context, "Cliente no encontrado", true);
-        print('No se encontró ningún documento con el número de contrato: $contratoNo');
+        print(
+            'No se encontró ningún documento con el número de contrato: $contratoNo');
       }
     } catch (e) {
       ocultarLoading(context);
@@ -2038,13 +2354,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> eliminarDocumentoPorId(String documentId) async {
-    CollectionReference clientes = FirebaseFirestore.instance.collection('clientes');
+    CollectionReference clientes =
+        FirebaseFirestore.instance.collection('clientes');
     mostrarLoading(context);
     try {
       // Elimina el documento usando su ID
       await clientes.doc(documentId).delete();
       ocultarLoading(context);
-      mostrarFlushbar(context, "Cliente eliminado ${deleteController.text} exitosamente", false);
+      mostrarFlushbar(context,
+          "Cliente eliminado ${deleteController.text} exitosamente", false);
       cleanFields();
       setState(() {
         deleteController.text = "";
@@ -2087,6 +2405,8 @@ class _HomeScreenState extends State<HomeScreen> {
       bodySerialController.text = "";
       observationController.text = "";
       ubicationController.text = "";
+      positionListController.text = "";
+      numberOfListController.text = "";
     });
   }
 
@@ -2095,10 +2415,11 @@ class _HomeScreenState extends State<HomeScreen> {
       message: message,
       messageColor: fail ? Colors.red : Colors.white,
       duration: Duration(seconds: 3),
-      flushbarPosition: FlushbarPosition.TOP, // Sale desde arriba
+      flushbarPosition: FlushbarPosition.TOP,
+      // Sale desde arriba
       backgroundColor: Colors.blueGrey[800]!,
       icon: Icon(
-       fail ? Icons.warning : Icons.check_circle,
+        fail ? Icons.warning : Icons.check_circle,
         color: fail ? Colors.red : Colors.white,
       ),
     )..show(context);
@@ -2119,7 +2440,7 @@ class _HomeScreenState extends State<HomeScreen> {
       print('Error al cerrar sesión: $e');
 
       // Mostrar un mensaje de error si ocurre algún problema
-   mostrarFlushbar(context, "Error al cerrar sesión", true);
+      mostrarFlushbar(context, "Error al cerrar sesión", true);
     }
   }
 
@@ -2144,5 +2465,4 @@ class _HomeScreenState extends State<HomeScreen> {
   void ocultarLoading(BuildContext context) {
     Navigator.pop(context); // Cierra el diálogo de loading
   }
-
 }
