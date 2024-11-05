@@ -66,6 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
     print(userEmail);
     if(userEmail != "fiaoexpressapp@gmail.com") {
       editable = false;
+    } else {
+      editable = true;
     }
     super.initState();
   }
