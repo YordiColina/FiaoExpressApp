@@ -56,7 +56,7 @@ bool readyToDelivery = false;
 String? selectedOption;
 String? selectedStatusOption;
 List<String> options = ['Ahorro', 'Planificado', 'Entrega inmediata',];
-List<String> statusOptions = ['Inicio', 'Asociado', 'Pre-adjudicación','Adjudicación','Post-adjudicación','Culminado','Anulado'];
+List<String> statusOptions = ['Inicial', 'Asociado', 'Pre-adjudicación','Adjudicación','Post-adjudicación','Culminado','Anulado'];
 String userEmail = "";
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -1640,7 +1640,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 20,
                 ),
                 Visibility(
-                  visible: (readyToDelivery  && !editable) || ( !editable && selectedStatusOption != "Inicio"
+                  visible: (readyToDelivery  && !editable) || ( !editable && selectedStatusOption != "Inicial"
                       && selectedStatusOption != "Asociado" && selectedStatusOption != "Pre-adjudicación"
                       && selectedStatusOption != "Anulado") || editable,
                   child: Padding(
