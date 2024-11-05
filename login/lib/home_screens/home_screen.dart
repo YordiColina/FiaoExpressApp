@@ -1581,7 +1581,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Visibility(
                   visible: (readyToDelivery  && !editable) || ( !editable && selectedStatusOption != "Inicio"
-                      && selectedStatusOption != "Asociado" && selectedStatusOption != "Pre-adjudicación"),
+                      && selectedStatusOption != "Asociado" && selectedStatusOption != "Pre-adjudicación") || editable,
                   child: Padding(
                     padding: EdgeInsets.only(
                         left: MediaQuery.of(context).size.width * 0.050,
@@ -2136,13 +2136,7 @@ class _HomeScreenState extends State<HomeScreen> {
         nextPayDateController.text != "" &&
         statusController.text != "" &&
         feeMonthCost.text != "" &&
-        totalFeeCostController.text != "" &&
-        deliveryDateController.text != "" &&
-        colorController.text != "" &&
-        motorSerialController.text != "" &&
-        bodySerialController.text != "" &&
-        plateController.text != "" &&
-        observationController.text != "") {
+        totalFeeCostController.text != "" ) {
       try {
         // Crea un mapa con los datos del contrato
         Map<String, dynamic> datosContrato = {
@@ -2185,7 +2179,7 @@ class _HomeScreenState extends State<HomeScreen> {
         };
 
         Map<String, dynamic> estatus_en_fiaoExpress = {
-          'estatus': statusController.text,
+          'estatus': selectedStatusOption,
         };
 
         Map<String, dynamic> datos_de_entrega_de_la_moto = {
@@ -2234,6 +2228,8 @@ class _HomeScreenState extends State<HomeScreen> {
           feesController.text = "";
           nextPayDateController.text = "";
           planController.text = "";
+          selectedStatusOption = null;
+          selectedOption = null;
           admBillsController.text = "";
           fleesNumberController.text = "";
           totalfeesnumberController.text = "";
@@ -2390,6 +2386,8 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       contractNumberController.text = "";
       contractDateController.text = "";
+      selectedStatusOption = null;
+      selectedOption = null;
       adviserController.text = "";
       nameController.text = "";
       identificationController.text = "";
@@ -2439,6 +2437,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> signOut(BuildContext context) async {
     mostrarLoading(context);
     try {
+      cleanFields();
       await FirebaseAuth.instance.signOut();
       ocultarLoading(context);
 
