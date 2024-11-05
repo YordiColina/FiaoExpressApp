@@ -54,7 +54,9 @@ double progressBar = 0.0;
 bool editable = true;
 bool readyToDelivery = false;
 String? selectedOption;
-List<String> options = ['Ahorro planificado', 'Entrega inmediata',];
+String? selectedStatusOption;
+List<String> options = ['Ahorro', 'Planificado', 'Entrega inmediata',];
+List<String> statusOptions = ['Inicio', 'Asociado', 'Pre-adjudicación','Adjudicación','Post-adjudicación','Culminado'];
 String userEmail = "";
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -690,8 +692,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 setState(() {
                                   planController.text = newValue  ?? "";
                                   selectedOption = newValue;
-                                  if(selectedOption == "Ahorro planificado") {
+                                  if(selectedOption == "Ahorro" || selectedOption == "Planificado") {
                                     totalFeeCostController.text = "24";
+                                    readyToDelivery = false;
                                   } else {
                                     totalFeeCostController.text = "8";
                                     readyToDelivery = true;
@@ -1532,31 +1535,37 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      TextField(
-                        readOnly: !editable,
-                        controller: statusController,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                          fontFamily: 'Dorgan',
-                          fontStyle: FontStyle.italic,
-                        ),
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: "Estatus",
-                          hintStyle: const TextStyle(
-                            color: Colors.grey,
-                            fontFamily: 'Dorgan',
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            // Esquinas redondeadas
-                            borderSide: const BorderSide(
-                              color: Colors.white, // Color del borde
-                              width: 2.0, // Ancho del borde
+                      Container(
+                        width: double.infinity,
+                        height: 60,
+                        child: InputDecorator(
+                          decoration: const InputDecoration(border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(20))
+                          )),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: selectedStatusOption,
+                              dropdownColor: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              hint: const Text("Selecciona el estatus", style: TextStyle(
+                                color: Colors.grey,
+                                fontFamily: 'Dorgan',
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w400,
+                              ),),
+                              items: statusOptions.map((String option) {
+                                return DropdownMenuItem<String>(
+                                  value: option,
+                                  child: Text(option),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                 statusController.text = newValue  ?? "";
+                                  selectedStatusOption = newValue;
+
+                                });
+                              },
                             ),
                           ),
                         ),
@@ -1571,7 +1580,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 20,
                 ),
                 Visibility(
-                  visible: readyToDelivery && !editable,
+                  visible: (readyToDelivery  && !editable) || ( !editable && selectedStatusOption != "Inicio"
+                      && selectedStatusOption != "Asociado" && selectedStatusOption != "Pre-adjudicación"),
                   child: Padding(
                     padding: EdgeInsets.only(
                         left: MediaQuery.of(context).size.width * 0.050,
@@ -2151,7 +2161,7 @@ class _HomeScreenState extends State<HomeScreen> {
         };
 
         Map<String, dynamic> grupo_inscrito = {
-          'plan': planController.text,
+          'plan': selectedOption,
           'grupo': groupController.text,
           'nro_de_lista': numberOfListController.text,
           'posicion_en_la_lista': positionListController.text,
@@ -2317,6 +2327,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Map<String, dynamic> fiaoExpressStatus =
                 datos['estatus_en_fiaoExpress'];
             statusController.text = fiaoExpressStatus['estatus'];
+            selectedStatusOption = fiaoExpressStatus['estatus'];
 
             Map<String, dynamic> bikeDeliveryData =
                 datos['datos_de_entrega_de_la_moto'];

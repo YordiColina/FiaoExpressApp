@@ -118,7 +118,7 @@ class _LoginBodyState extends State<LoginBody> {
                 onTap: () {
                   showModalBottomSheet(
                     context: context,
-                    isScrollControlled: true, // Permite que ocupe todo el espacio disponible
+                    isScrollControlled: true,
                     builder: (BuildContext context) {
                       return DraggableScrollableSheet(
                         expand: false,
@@ -149,33 +149,7 @@ class _LoginBodyState extends State<LoginBody> {
             const SizedBox(
                 height: 40
             ),
-            Visibility(
-              visible: !adminAccess,
-              child: Container(
-                width: 200,
-                height: 60,
-                child: ElevatedButton(
-                  onPressed: () {
-                   setState(() {
-                      adminAccess = true;
-                   });
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      side: BorderSide(color: Colors.white,width: 2)
-                  ),
-                  child: const Text("     Acceso\nAdministrador",style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Dorgan',
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16
-                  ),
-                    maxLines: 2,
-                  ),
-                ),
-              ),
-            ),
+
             Visibility(
               visible: adminAccess,
               child: Container(
@@ -203,7 +177,7 @@ class _LoginBodyState extends State<LoginBody> {
               height: 10,
             ),
             Container(
-              width: 200,
+              width: 220,
               height: 60,
               child: ElevatedButton(
                 onPressed: () {
@@ -218,8 +192,39 @@ class _LoginBodyState extends State<LoginBody> {
                     fontFamily: 'Dorgan',
                     fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w800,
-                    fontSize: 16
+                    fontSize: 20
                 ),),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+
+            Visibility(
+              visible: !adminAccess,
+              child: Container(
+                width: 150,
+                height: 55,
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      adminAccess = true;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      side: BorderSide(color: Colors.white,width: 2)
+                  ),
+                  child: const Text("     Acceso\nAdministrador",style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Dorgan',
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 12
+                  ),
+                    maxLines: 2,
+                  ),
+                ),
               ),
             ),
           ],
