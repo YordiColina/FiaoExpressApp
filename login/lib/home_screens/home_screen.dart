@@ -392,6 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       TextField(
                         readOnly: !editable,
+                        maxLines: null,
                         controller: nameController,
                         style: const TextStyle(
                           fontSize: 18,
@@ -589,6 +590,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       TextField(
                         readOnly: !editable,
+                        maxLines: null,
                         controller: addressController,
                         style: const TextStyle(
                           fontSize: 18,
@@ -664,7 +666,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      Container(
+                     editable ? Container(
                         width: double.infinity,
                         height: 60,
                         child: InputDecorator(
@@ -704,7 +706,35 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                      ),
+                      ) :  TextField(
+                       readOnly: !editable,
+                       controller: planController,
+                       style: const TextStyle(
+                         fontSize: 18,
+                         fontWeight: FontWeight.w800,
+                         fontFamily: 'Dorgan',
+                         fontStyle: FontStyle.italic,
+                       ),
+                       decoration: InputDecoration(
+                         filled: true,
+                         fillColor: Colors.white,
+                         hintText: "Plan",
+                         hintStyle: const TextStyle(
+                           color: Colors.grey,
+                           fontFamily: 'Dorgan',
+                           fontStyle: FontStyle.italic,
+                           fontWeight: FontWeight.w400,
+                         ),
+                         border: OutlineInputBorder(
+                           borderRadius: BorderRadius.circular(20),
+                           // Esquinas redondeadas
+                           borderSide: const BorderSide(
+                             color: Colors.white, // Color del borde
+                             width: 2.0, // Ancho del borde
+                           ),
+                         ),
+                       ),
+                     ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -1535,7 +1565,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      Container(
+                    editable ?  Container(
                         width: double.infinity,
                         height: 60,
                         child: InputDecorator(
@@ -1569,7 +1599,35 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
+                      ):  TextField(
+                      readOnly: !editable,
+                      controller: statusController,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        fontFamily: 'Dorgan',
+                        fontStyle: FontStyle.italic,
                       ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: "estatus",
+                        hintStyle: const TextStyle(
+                          color: Colors.grey,
+                          fontFamily: 'Dorgan',
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          // Esquinas redondeadas
+                          borderSide: const BorderSide(
+                            color: Colors.white, // Color del borde
+                            width: 2.0, // Ancho del borde
+                          ),
+                        ),
+                      ),
+                    ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -1864,6 +1922,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         TextField(
                           readOnly: !editable,
                           controller: observationController,
+                          maxLines: null,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
