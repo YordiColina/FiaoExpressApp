@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:login/login_sreens/create_account.dart';
 import 'package:login/login_sreens/password_recovery.dart';
 import '../bloc/login_bloc.dart';
 import '../home_screens/home_screen.dart';
@@ -33,7 +34,7 @@ class _LoginBodyState extends State<LoginBody> {
         return Column(
           children: [
             Visibility(
-              visible: adminAccess,
+              visible: true,
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: TextField(
@@ -67,7 +68,7 @@ class _LoginBodyState extends State<LoginBody> {
             ),
             const SizedBox(height: 20),
             Visibility(
-              visible: adminAccess,
+              visible: true,
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: TextField(
@@ -151,8 +152,8 @@ class _LoginBodyState extends State<LoginBody> {
             ),
 
             Visibility(
-              visible: adminAccess,
-              child: Container(
+              visible: true,
+              child: SizedBox(
                 width: 200,
                 height: 60,
                 child: ElevatedButton(
@@ -161,7 +162,7 @@ class _LoginBodyState extends State<LoginBody> {
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
-                      side: BorderSide(color: Colors.white,width: 2)
+                      side: const BorderSide(color: Colors.white,width: 2)
                   ),
                   child: const Text("Iniciar Sesión",style: TextStyle(
                       color: Colors.white,
@@ -176,23 +177,35 @@ class _LoginBodyState extends State<LoginBody> {
             const SizedBox(
               height: 10,
             ),
-            Container(
-              width: 220,
+            SizedBox(
+              width: 200,
               height: 60,
               child: ElevatedButton(
                 onPressed: () {
-                  bloc.add(LoginButtonPressed("clientuserfiao@gmail.com", "123456",context));
+                 // bloc.add(LoginButtonPressed("clientuserfiao@gmail.com", "123456",context));
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (BuildContext context) {
+                      return DraggableScrollableSheet(
+                        expand: false,
+                        builder: (context, scrollController) {
+                          return const CreateAccount();
+                        },
+                      );
+                    },
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     side: const BorderSide(color: Colors.black,width: 2)
                 ),
-                child: const Text("Acceso cliente",style: TextStyle(
+                child: const Text("Crear Cuenta",style: TextStyle(
                     color: Colors.black,
                     fontFamily: 'Dorgan',
                     fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w800,
-                    fontSize: 20
+                    fontSize: 16
                 ),),
               ),
             ),
@@ -200,33 +213,6 @@ class _LoginBodyState extends State<LoginBody> {
               height: 10,
             ),
 
-            Visibility(
-              visible: !adminAccess,
-              child: Container(
-                width: 150,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      adminAccess = true;
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      side: BorderSide(color: Colors.white,width: 2)
-                  ),
-                  child: const Text("     Acceso\nAdministrador",style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Dorgan',
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 12
-                  ),
-                    maxLines: 2,
-                  ),
-                ),
-              ),
-            ),
           ],
         );
       },

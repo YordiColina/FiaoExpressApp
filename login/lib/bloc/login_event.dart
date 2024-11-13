@@ -16,3 +16,10 @@ class LoginButtonPressed extends LoginEvent {
   @override
   List<Object> get props => [email, password,context];
 }
+
+class CreateAccountEvent extends LoginEvent {
+  CreateAccountEvent(String email, String password, BuildContext context) : super(email, password, context);
+
+  @override
+  List<Object> get props => [email, password,context];
+}

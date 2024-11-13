@@ -17,7 +17,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('Recuperar contraseña',  style: TextStyle(
+        title: const Text('Recuperar contraseña',  style: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w700,
           fontFamily: 'Dorgan',
@@ -35,7 +35,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                     hintText: 'Correo electrónico' ,
-                    hintStyle: TextStyle(
+                    hintStyle: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Dorgan',
@@ -51,7 +51,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
 
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   recuperarContrasena(context, _emailController.text);

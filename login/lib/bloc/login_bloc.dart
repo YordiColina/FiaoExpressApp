@@ -14,6 +14,7 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginState()) {
     on<LoginButtonPressed>(_login);
+    on<CreateAccountEvent>(_registerUser);
   }
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -44,6 +45,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       print('Error de inicio de sesión: $e');
     }
   }
+
+  Future<void> _registerUser(CreateAccountEvent event ,
+      Emitter<LoginState> emit) async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: event.email,
+        password: event.password,
+      );
+
+      mostrarFlushbar(event.context, "Cuenta creada exitosamente", false);
+    } catch (e) {
+      // Muestra un mensaje de error
+      mostrarFlushbar(event.context, "Error al crear cuenta", true);
+    }
+  }
+
 
   String getCurrentUserEmail() {
     return _auth.currentUser?.email ?? "";
