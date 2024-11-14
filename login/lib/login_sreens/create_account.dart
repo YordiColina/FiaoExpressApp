@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login/bloc/login_bloc.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -11,10 +12,16 @@ class CreateAccount extends StatefulWidget {
 }
 TextEditingController _emailController = TextEditingController();
 TextEditingController _passwordController = TextEditingController();
-LoginBloc _bloc = LoginBloc();
+
 
 
 class _CreateAccountState extends State<CreateAccount> {
+  @override
+  void initState() {
+    _emailController.text = "";
+    _passwordController.text = "";
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +39,9 @@ class _CreateAccountState extends State<CreateAccount> {
           ),
         ),
       ),
-      body: Padding(
+      body: BlocBuilder<LoginBloc, LoginState>(
+            builder: (context, state) {
+       return Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
@@ -54,8 +63,12 @@ class _CreateAccountState extends State<CreateAccount> {
                         color: Colors.black, // Color del borde
                         width: 2.0, // Ancho del borde
                       ),
-                    )
-
+                    ),
+                ),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600// Cambia este color según tus preferencias
                 ),
               ),
               const SizedBox(height: 20),
@@ -79,6 +92,11 @@ class _CreateAccountState extends State<CreateAccount> {
                     )
 
                 ),
+                style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600// Cambia este color según tus preferencias
+                ),
               ),
               const SizedBox(height: 20),
               SizedBox(
@@ -87,9 +105,10 @@ class _CreateAccountState extends State<CreateAccount> {
                 child: ElevatedButton(
                   onPressed: () {
                     if(_emailController.text != "" && _passwordController.text != "") {
-                      _bloc.add(CreateAccountEvent(_emailController.text.trim(),
+                      context.read<LoginBloc>().add(CreateAccountEvent(_emailController.text.trim(),
                           _passwordController.text.trim(), context));
-                      Navigator.pushReplacementNamed(context, '/login');
+                      _emailController.text = "";
+                      _passwordController.text = "";
                     }
 
                   },
@@ -98,7 +117,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       side: const BorderSide(color: Colors.black,width: 2)
                   ),
 
-                  child: const Text('Crear cuenta',   style: TextStyle(
+                  child: const Text('Crear cuenta', style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'Dorgan',
                     fontSize: 16,
@@ -110,7 +129,11 @@ class _CreateAccountState extends State<CreateAccount> {
             ],
           ),
         ),
-      ),
+      );
+  },
+  )
+
+
     );
   }
 

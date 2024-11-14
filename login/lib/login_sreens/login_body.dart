@@ -187,14 +187,18 @@ class _LoginBodyState extends State<LoginBody> {
                     context: context,
                     isScrollControlled: true,
                     builder: (BuildContext context) {
-                      return DraggableScrollableSheet(
-                        expand: false,
-                        builder: (context, scrollController) {
-                          return const CreateAccount();
-                        },
+                      return BlocProvider.value(
+                        value: bloc,  // Usa el mismo LoginBloc de LoginBody
+                        child: DraggableScrollableSheet(
+                          expand: false,
+                          builder: (context, scrollController) {
+                            return const CreateAccount();
+                          },
+                        ),
                       );
                     },
                   );
+
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,

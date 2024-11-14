@@ -53,6 +53,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         email: event.email,
         password: event.password,
       );
+      Navigator.pushReplacementNamed(event.context, '/login');
 
       mostrarFlushbar(event.context, "Cuenta creada exitosamente", false);
     } catch (e) {
@@ -73,7 +74,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       messageColor: fail ? Colors.red : Colors.white,
       duration: Duration(seconds: 3),
       flushbarPosition: FlushbarPosition.TOP, // Sale desde arriba
-      backgroundColor: Colors.blueGrey[800]!,
+      backgroundColor: Colors.blueGrey[800] ?? Colors.blueGrey,
       icon: Icon(
         fail ? Icons.warning : Icons.check_circle,
         color: fail ? Colors.red : Colors.white,
