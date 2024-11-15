@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class HomeAux extends StatefulWidget {
   const HomeAux({super.key});
 
