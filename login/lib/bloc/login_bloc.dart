@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:login/home_screens/home_aux.dart';
 
 import '../home_screens/home_screen.dart';
 
@@ -34,7 +35,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       ocultarLoading(event.context);
       if(state.status == true) {
         Navigator.of(event.context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+            MaterialPageRoute(builder: (context) => const HomeAux()));
       }
       // Si la autenticación es exitosa, navega a la pantalla principal
      mostrarFlushbar(event.context, "Inicio de sesión exitoso", false);
