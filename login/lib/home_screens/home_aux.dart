@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login/bloc/login_bloc.dart';
 
 class HomeAux extends StatefulWidget {
   const HomeAux({super.key});
@@ -9,6 +10,7 @@ class HomeAux extends StatefulWidget {
 
 class _HomeAuxState extends State<HomeAux> {
   final List<TextEditingController> controllers = [];
+  LoginBloc bloc = LoginBloc();
   final List<String> labels = [
     "Contrato no",
     "Fecha de Contrato",
@@ -56,11 +58,20 @@ class _HomeAuxState extends State<HomeAux> {
     "Estatus en FiaoExpress",
     "Datos de entrega de la moto"
   ];
+  String userEmail = "";
+  bool editable = true;
 
   @override
   void initState() {
     for (var i = 0; i < labels.length; i++) {
       controllers.add(TextEditingController());
+    }
+    userEmail = bloc.getCurrentUserEmail();
+    print(userEmail);
+    if(userEmail != "fiaoexpressapp@gmail.com") {
+      editable = false;
+    } else {
+      editable = true;
     }
     super.initState();
   }
@@ -94,7 +105,6 @@ class _HomeAuxState extends State<HomeAux> {
               _textFielWidget(
                   labels[index],
                   controllers[index],
-                  true,
                 index
               ),
         ),
@@ -107,7 +117,7 @@ class _HomeAuxState extends State<HomeAux> {
   }
 
   Widget _textFielWidget(String title, TextEditingController controller,
-      bool editable, int index) {
+       int index) {
     return Column(
       children: [
         Visibility(
