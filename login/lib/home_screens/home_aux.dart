@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login/bloc/login_bloc.dart';
+import 'package:login/home_screens/home_bloc/home_bloc.dart';
 
 class HomeAux extends StatefulWidget {
   const HomeAux({super.key});
@@ -11,6 +13,7 @@ class HomeAux extends StatefulWidget {
 class _HomeAuxState extends State<HomeAux> {
   final List<TextEditingController> controllers = [];
   LoginBloc bloc = LoginBloc();
+  HomeBloc homeBloc = HomeBloc();
   final List<String> labels = [
     "Contrato no",
     "Fecha de Contrato",
@@ -88,7 +91,16 @@ class _HomeAuxState extends State<HomeAux> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
+      body: MultiBlocProvider(
+          providers: [
+            BlocProvider<HomeBloc>(
+              create: ((context) => homeBloc),
+            ),
+          ],
+          child:  BlocBuilder<HomeBloc, HomeState>(
+
+            builder: (context, state) {
+       return Padding(
         padding: EdgeInsets.only(top: MediaQuery
             .of(context)
             .size
@@ -110,9 +122,34 @@ class _HomeAuxState extends State<HomeAux> {
         ),
                ),
               ),
+            const SizedBox(
+              height: 20,
+            ),
+            Visibility(
+              visible: editable,
+              child: ElevatedButton(
+                  onPressed: () {
+                    homeBloc.add(GetFieldValuesEvent(controllers));
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[300]),
+                  child: const Text(" Crear cliente",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Dorgan',
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w800,
+                      ))),
+            ),
              ],
         ),
-       ),
+
+       );
+  },
+  ),
+
+  )
     );
   }
 
@@ -194,5 +231,6 @@ class _HomeAuxState extends State<HomeAux> {
         ),
       ],
     );
+
   }
 }
