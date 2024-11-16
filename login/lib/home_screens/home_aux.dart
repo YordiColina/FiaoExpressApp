@@ -66,7 +66,7 @@ class _HomeAuxState extends State<HomeAux> {
 
   @override
   void initState() {
-    for (var i = 0; i < labels.length; i++) {
+    for (var i = 0; i <= labels.length; i++) {
       controllers.add(TextEditingController());
     }
     userEmail = bloc.getCurrentUserEmail();

@@ -20,14 +20,14 @@ part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeState()) {
-    on<GetFieldValuesEvent>(_login);
+    on<GetFieldValuesEvent>(_createUser);
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  CollectionReference _clientes =
+  final CollectionReference _clientes =
   FirebaseFirestore.instance.collection('clientes');
 
-  Future<void> _login(
+  Future<void> _createUser(
     GetFieldValuesEvent event,
     Emitter<HomeState> emit,
   ) async {
@@ -38,6 +38,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if (event.controllers[i].text.isNotEmpty) {
           validateControllers = true;
           print(event.controllers[4].text);
+          print(event.controllers.length);
         }
       }
       if (validateControllers) {
@@ -81,14 +82,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 observacion: event.controllers[29].text)));
         await _clientes
             .doc(state.datosCliente?.cedula)
-            .set(HomeState().toMap());
-        print(state.datosCliente?.cedula);
+            .set(state.toMap());
+        print(state.toMap());
       } else {
         print("no paso la validación papu");
       }
 
 
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   String getCurrentUserEmail() {
