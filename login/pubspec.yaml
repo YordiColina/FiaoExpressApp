@@ -16,6 +16,7 @@ dependencies:
   cloud_firestore: ^5.4.4
   equatable: ^2.0.5
   another_flushbar: ^1.12.30
+  firedart: ^0.9.8
 
 dev_dependencies:
   flutter_test:

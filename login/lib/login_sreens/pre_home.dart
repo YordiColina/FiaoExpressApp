@@ -11,7 +11,7 @@ class _PreHomeState extends State<PreHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ,
+      body: Container(),
     );
   }
 }
