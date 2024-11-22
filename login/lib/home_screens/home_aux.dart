@@ -91,13 +91,7 @@ class _HomeAuxState extends State<HomeAux> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: MultiBlocProvider(
-          providers: [
-            BlocProvider<HomeBloc>(
-              create: ((context) => homeBloc),
-            ),
-          ],
-          child:  BlocBuilder<HomeBloc, HomeState>(
+      body:   BlocBuilder<HomeBloc, HomeState>(
 
             builder: (context, state) {
        return Padding(
@@ -109,6 +103,38 @@ class _HomeAuxState extends State<HomeAux> {
             right: MediaQuery.of(context).size.width * 0.050 ),
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                    child: const Icon(Icons.arrow_back_ios_new)),
+
+                GestureDetector(
+                  onTap: () {
+                    homeBloc.signOut(context);
+                  },
+                  child: Padding(
+                    padding:  EdgeInsets.only(left: 10),
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      child:  Text(
+                        editable != false ? "Cerrar sesión" : "Atrás",
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Dorgan',
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
         Expanded(
         child: ListView(
         children: List.generate(
@@ -149,7 +175,7 @@ class _HomeAuxState extends State<HomeAux> {
   },
   ),
 
-  )
+
     );
   }
 

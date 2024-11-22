@@ -13,3 +13,10 @@ class GetFieldValuesEvent extends HomeEvent {
  @override
  List<Object> get props => [controllers];
 }
+
+class SetValuesEvent extends HomeEvent {
+ const SetValuesEvent(super.controllers);
+
+ @override
+ List<Object> get props => [controllers];
+}

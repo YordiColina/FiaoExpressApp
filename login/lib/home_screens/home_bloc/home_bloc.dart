@@ -21,6 +21,7 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeState()) {
     on<GetFieldValuesEvent>(_createUser);
+    on<SetValuesEvent>(_getUser);
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -79,7 +80,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 serialMotor: event.controllers[26].text,
                 serialCarroceria: event.controllers[27].text,
                 placa: event.controllers[28].text,
-                observacion: event.controllers[29].text)));
+                observacion: event.controllers[29].text),
+                fieldsController: event.controllers));
         await _clientes
             .doc(state.datosCliente?.cedula)
             .set(state.toMap());
@@ -93,6 +95,91 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       print(e);
     }
   }
+
+  Future<void> _getUser(
+      SetValuesEvent event,
+      Emitter<HomeState> emit,
+      ) async {
+    print("si disparo el evento");
+    try {
+      CollectionReference clientes =
+      FirebaseFirestore.instance.collection('clientes');
+      QuerySnapshot querySnapshot = await clientes
+          .where('datosCliente.cédula', isEqualTo: event.controllers[0].text)
+          .get();
+      if (event.controllers[0].text != "") {
+        for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+          // Obtiene los datos del documento completo
+          Map<String, dynamic> datos = doc.data() as Map<String, dynamic>;
+          List<TextEditingController> dataController = [];
+          for(int i = 0; i < 30; i++) {
+            dataController.add(TextEditingController());
+          }
+
+
+
+          // Extrae los datos del contrato
+          Map<String, dynamic> contractData = datos['datosContrato'];
+          dataController[0].text = contractData['contratoNo'];
+          dataController[1].text = contractData['fechaContrato'];
+          dataController[2].text = contractData['asesor'];
+
+          // Extrae los datos del cliente
+          Map<String, dynamic> clientData = datos['datosCliente'];
+          dataController[3].text = clientData['nombre'];
+          dataController[4].text = clientData['cédula'];
+          dataController[5].text = clientData['teléfono'];
+          dataController[6].text = clientData['ubicación'];
+          dataController[7].text = clientData['dirección'];
+
+          Map<String, dynamic> selectedGroup = datos['grupo_inscrito'];
+          dataController[8].text = selectedGroup['plan'];
+          dataController[9].text = selectedGroup['plan'];
+          dataController[10].text = selectedGroup['grupo'];
+          dataController[11].text = selectedGroup['nro_de_lista'];
+          dataController[12].text = selectedGroup['posicion_en_la_lista'];
+          dataController[13].text = selectedGroup['modelo_de_moto'];
+          dataController[14].text = selectedGroup['marca_de_moto'];
+          dataController[15].text = selectedGroup['valor_cuota_mensual_en_dolares'];
+          dataController[16].text = selectedGroup['nro_de_cuotas_totales'];
+
+
+          Map<String, dynamic> successPayments = datos['pagos_realizados'];
+          dataController[17].text = successPayments['cuotaInicial'];
+          dataController[18].text = successPayments['gastosADM'];
+          dataController[19].text = successPayments['nro_de_cuotas_canceladas'];
+          dataController[20].text = successPayments['nro_de_cuotas_restantes'];
+          dataController[21].text = successPayments["proxima_fecha_de_pago"];
+
+          Map<String, dynamic> latePayment = datos['pago_de_morosidad'];
+          dataController[22].text = latePayment['díasDeRetraso'];
+          dataController[23].text = latePayment['morosidad'];
+
+          Map<String, dynamic> fiaoExpressStatus =
+          datos['estatus_en_fiaoExpress'];
+          dataController[24].text = fiaoExpressStatus['estatus'];
+
+
+          Map<String, dynamic> bikeDeliveryData =
+          datos['datos_de_entrega_de_la_moto'];
+          dataController[25].text = bikeDeliveryData['color'];
+          dataController[26].text = bikeDeliveryData['fecha_de_entrega'];
+          dataController[27].text = bikeDeliveryData['serialMotor'];
+          dataController[28].text = bikeDeliveryData['serialCarroceria'];
+          dataController[29].text = bikeDeliveryData['placa'];
+          dataController[30].text = bikeDeliveryData['observacion'];
+
+
+
+        }
+      }
+
+
+    } catch (e) {
+      print(e);
+    }
+  }
+
 
   String getCurrentUserEmail() {
     return _auth.currentUser?.email ?? "";
@@ -129,6 +216,35 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         );
       },
     );
+  }
+
+  Future<void> signOut(BuildContext context) async {
+    mostrarLoading(context);
+    try {
+      await FirebaseAuth.instance.signOut();
+      ocultarLoading(context);
+
+      // Opcional: Navegar a la pantalla de inicio de sesión después del cierre de sesión
+      Navigator.pushReplacementNamed(context, '/login');
+      mostrarFlushbar(context, "Sesión cerrada exitosamente", false);
+      print('Sesión cerrada correctamente.');
+    } catch (e) {
+      ocultarLoading(context);
+      print('Error al cerrar sesión: $e');
+
+      // Mostrar un mensaje de error si ocurre algún problema
+      mostrarFlushbar(context, "Error al cerrar sesión", true);
+    }
+  }
+
+  List<TextEditingController> cleanFields() {
+   List<TextEditingController> controllers = [];
+   int controllersNumber = 30 ;
+   for( int i = 0; i < controllersNumber; i++) {
+     controllers.add(TextEditingController());
+     controllers[i].text = "";
+   }
+   return controllers;
   }
 
   void ocultarLoading(BuildContext context) {
