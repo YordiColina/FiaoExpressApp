@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:login/home_screens/add_product.dart';
 import 'package:login/home_screens/home_aux.dart';
 import '../home_screens/home_bloc/home_bloc.dart';
 
@@ -132,7 +133,28 @@ class _PreHomeState extends State<PreHome> {
                              child: productCard(state.fieldsController ?? [])),
                          const SizedBox(
                            height: 20,
-                         )
+                         ),
+                         Visibility(
+                           visible: index == 1,
+                             child: GestureDetector(
+                               onTap: () {
+                                 Navigator.push(
+                                   context,
+                                   MaterialPageRoute(builder: (context) => BlocProvider.value(
+                                       value: homeBloc,
+                                       child:  AddProduct(clientData: state.fieldsController ?? [] ,indexProduct: 2,))),
+                                 );
+                               },
+                               child: Container(
+                                   height: 50,
+                                   width: 50,
+                                   decoration: BoxDecoration(
+                                     border: Border.all(color: Colors.black),
+                                     borderRadius: BorderRadius.circular(50)
+
+                                   ),
+                                   child: const Icon(Icons.add,size: 50,)),
+                             ))
                        ],
                      )
                       ),
