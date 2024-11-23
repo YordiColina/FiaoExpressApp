@@ -22,6 +22,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeState()) {
     on<GetFieldValuesEvent>(_createUser);
     on<SetValuesEvent>(_getUser);
+    on<DeleteClientEvent>(_deleteClient);
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -86,12 +87,35 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             .doc(state.datosCliente?.cedula)
             .set(state.toMap());
         print(state.toMap());
+        mostrarFlushbar(event.context, "Cliente añadido/editado con éxito", false);
       } else {
+        mostrarFlushbar(event.context, "Error al crear/editar cliente", true);
         print("no paso la validación papu");
       }
-
-
     } catch (e) {
+      mostrarFlushbar(event.context, "Error al crear/editar cliente", true);
+      print(e);
+    }
+  }
+
+  Future<void> _deleteClient(
+      DeleteClientEvent event,
+      Emitter<HomeState> emit,
+      ) async {
+    print("si disparo el evento");
+    try {
+      bool validateControllers = event.controllers.isNotEmpty;
+
+      if (validateControllers) {
+        mostrarLoading(event.context);
+        await _clientes.doc(event.controllers[0].text.trim()).delete();
+        ocultarLoading(event.context);
+        mostrarFlushbar(event.context, "Cliente Borrado con éxito", false);
+      } else {
+        mostrarFlushbar(event.context, "Ingresa número de cédula", true);
+      }
+    } catch (e) {
+      mostrarFlushbar(event.context, "Error al borrar cliente", true);
       print(e);
     }
   }
@@ -108,16 +132,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           .where('datosCliente.cédula', isEqualTo: event.controllers[0].text)
           .get();
       if (event.controllers[0].text != "") {
+        List<TextEditingController> dataController = [];
         for (QueryDocumentSnapshot doc in querySnapshot.docs) {
           // Obtiene los datos del documento completo
           Map<String, dynamic> datos = doc.data() as Map<String, dynamic>;
-          List<TextEditingController> dataController = [];
           for(int i = 0; i < 30; i++) {
             dataController.add(TextEditingController());
           }
-
-
-
           // Extrae los datos del contrato
           Map<String, dynamic> contractData = datos['datosContrato'];
           dataController[0].text = contractData['contratoNo'];
@@ -134,47 +155,42 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
           Map<String, dynamic> selectedGroup = datos['grupo_inscrito'];
           dataController[8].text = selectedGroup['plan'];
-          dataController[9].text = selectedGroup['plan'];
-          dataController[10].text = selectedGroup['grupo'];
-          dataController[11].text = selectedGroup['nro_de_lista'];
-          dataController[12].text = selectedGroup['posicion_en_la_lista'];
-          dataController[13].text = selectedGroup['modelo_de_moto'];
-          dataController[14].text = selectedGroup['marca_de_moto'];
-          dataController[15].text = selectedGroup['valor_cuota_mensual_en_dolares'];
-          dataController[16].text = selectedGroup['nro_de_cuotas_totales'];
+          dataController[9].text = selectedGroup['grupo'];
+          dataController[10].text = selectedGroup['nro_de_lista'];
+          dataController[11].text = selectedGroup['posicion_en_la_lista'];
+          dataController[12].text = selectedGroup['modelo_de_moto'];
+          dataController[13].text = selectedGroup['marca_de_moto'];
+          dataController[14].text = selectedGroup['valor_cuota_mensual_en_dolares'];
+          dataController[15].text = selectedGroup['nro_de_cuotas_totales'];
 
 
           Map<String, dynamic> successPayments = datos['pagos_realizados'];
-          dataController[17].text = successPayments['cuotaInicial'];
-          dataController[18].text = successPayments['gastosADM'];
-          dataController[19].text = successPayments['nro_de_cuotas_canceladas'];
-          dataController[20].text = successPayments['nro_de_cuotas_restantes'];
-          dataController[21].text = successPayments["proxima_fecha_de_pago"];
+          dataController[16].text = successPayments['cuotaInicial'];
+          dataController[17].text = successPayments['gastosADM'];
+          dataController[18].text = successPayments['nro_de_cuotas_canceladas'];
+          dataController[19].text = successPayments['nro_de_cuotas_restantes'];
+          dataController[20].text = successPayments["proxima_fecha_de_pago"];
 
           Map<String, dynamic> latePayment = datos['pago_de_morosidad'];
-          dataController[22].text = latePayment['díasDeRetraso'];
-          dataController[23].text = latePayment['morosidad'];
+          dataController[21].text = latePayment['díasDeRetraso'];
+          dataController[22].text = latePayment['morosidad'];
 
           Map<String, dynamic> fiaoExpressStatus =
           datos['estatus_en_fiaoExpress'];
-          dataController[24].text = fiaoExpressStatus['estatus'];
+          dataController[23].text = fiaoExpressStatus['estatus'];
 
 
           Map<String, dynamic> bikeDeliveryData =
           datos['datos_de_entrega_de_la_moto'];
-          dataController[25].text = bikeDeliveryData['color'];
-          dataController[26].text = bikeDeliveryData['fecha_de_entrega'];
-          dataController[27].text = bikeDeliveryData['serialMotor'];
-          dataController[28].text = bikeDeliveryData['serialCarroceria'];
-          dataController[29].text = bikeDeliveryData['placa'];
-          dataController[30].text = bikeDeliveryData['observacion'];
-
-
-
+          dataController[24].text = bikeDeliveryData['color'];
+          dataController[25].text = bikeDeliveryData['fecha_de_entrega'];
+          dataController[26].text = bikeDeliveryData['serialMotor'];
+          dataController[27].text = bikeDeliveryData['serialCarroceria'];
+          dataController[28].text = bikeDeliveryData['placa'];
+          dataController[29].text = bikeDeliveryData['observacion'];
         }
+        emit(state.copyWith(fieldsController: dataController));
       }
-
-
     } catch (e) {
       print(e);
     }
@@ -237,10 +253,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  List<TextEditingController> cleanFields() {
+  List<TextEditingController> cleanFields(int size) {
    List<TextEditingController> controllers = [];
-   int controllersNumber = 30 ;
-   for( int i = 0; i < controllersNumber; i++) {
+   for( int i = 0; i < size; i++) {
      controllers.add(TextEditingController());
      controllers[i].text = "";
    }

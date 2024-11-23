@@ -4,16 +4,24 @@ import 'package:login/bloc/login_bloc.dart';
 import 'package:login/home_screens/home_bloc/home_bloc.dart';
 
 class HomeAux extends StatefulWidget {
-  const HomeAux({super.key});
+ final List<TextEditingController> clientData;
+  const HomeAux({super.key, required this.clientData});
 
   @override
   State<HomeAux> createState() => _HomeAuxState();
 }
 
 class _HomeAuxState extends State<HomeAux> {
-  final List<TextEditingController> controllers = [];
+  List<TextEditingController> controllers = [];
   LoginBloc bloc = LoginBloc();
+  String? selectedOption;
+  String? selectedPlanOption;
+  double progressBar = 0.0;
+  bool readyToDelivery = false;
   HomeBloc homeBloc = HomeBloc();
+  List<String> options = ['Ahorro', 'Planificado', 'Entrega inmediata',];
+  List<String> statusOptions = ['Inicial', 'Asociado', 'Pre-adjudicación','Adjudicación',
+    'Post-adjudicación','Culminado','Anulado'];
   final List<String> labels = [
     "Contrato no",
     "Fecha de Contrato",
@@ -25,7 +33,7 @@ class _HomeAuxState extends State<HomeAux> {
     "Ubicación",
     "Dirección",
     /////// section 3
-    "plan",
+    "Plan",
     "grupo",
     "Nro de lista",
     "Posición en la lista",
@@ -48,9 +56,9 @@ class _HomeAuxState extends State<HomeAux> {
     "Fecha de entrega",
     "Color",
     "Serial motor",
-    "Serial carroceria"
-        "placa",
-    "observación"
+    "Serial carroceria",
+        "Placa",
+    "Observación"
   ];
   final List<String> sectionTitles = [
     "Datos del contrato",
@@ -69,6 +77,14 @@ class _HomeAuxState extends State<HomeAux> {
     for (var i = 0; i <= labels.length; i++) {
       controllers.add(TextEditingController());
     }
+    if(widget.clientData != null) {
+      controllers = widget.clientData;
+      selectedPlanOption = widget.clientData[8].text.trim();
+      selectedOption = widget.clientData[23].text.trim();
+      int totalCuotas = int.parse(widget.clientData[15].text);
+      int cuotasPagadas = int.parse(widget.clientData[18].text);
+      progressBar = cuotasPagadas/totalCuotas;
+    }
     userEmail = bloc.getCurrentUserEmail();
     print(userEmail);
     if(userEmail != "fiaoexpressapp@gmail.com") {
@@ -79,13 +95,7 @@ class _HomeAuxState extends State<HomeAux> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    for (var controller in controllers) {
-      controller.dispose();
-    }
-    super.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +127,7 @@ class _HomeAuxState extends State<HomeAux> {
                     homeBloc.signOut(context);
                   },
                   child: Padding(
-                    padding:  EdgeInsets.only(left: 10),
+                    padding:  const EdgeInsets.only(left: 10),
                     child: Container(
                       alignment: Alignment.centerRight,
                       child:  Text(
@@ -138,13 +148,17 @@ class _HomeAuxState extends State<HomeAux> {
         Expanded(
         child: ListView(
         children: List.generate(
-          labels.length,
+          labels.length ,
               (index) =>
-              _textFielWidget(
+           labels[index] == "Plan" && editable ?
+           selectableWidget(labels[index],index)
+           : labels[index] == "Estatus" && editable ?
+           selectableStatusWidget(labels[index], index)    
+          : _textFielWidget(
                   labels[index],
                   controllers[index],
                 index
-              ),
+              )
         ),
                ),
               ),
@@ -155,7 +169,7 @@ class _HomeAuxState extends State<HomeAux> {
               visible: editable,
               child: ElevatedButton(
                   onPressed: () {
-                    homeBloc.add(GetFieldValuesEvent(controllers));
+                    homeBloc.add(GetFieldValuesEvent(controllers,context));
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey[300]),
@@ -168,25 +182,197 @@ class _HomeAuxState extends State<HomeAux> {
                         fontWeight: FontWeight.w800,
                       ))),
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            Visibility(
+              visible: editable,
+              child: ElevatedButton(
+                  onPressed: () {
+                    homeBloc.add(GetFieldValuesEvent(controllers,context));
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[300]),
+                  child: const Text(" Editar cliente",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Dorgan',
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w800,
+                      ))),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Visibility(
+              visible: editable,
+              child: ElevatedButton(
+                  onPressed: () {
+                    if(controllers[4].text.isNotEmpty) {
+                      List<TextEditingController> auxControllers = [];
+                      auxControllers.add(controllers[4]);
+                      homeBloc.add(DeleteClientEvent(auxControllers,context));
+                      setState(() {
+                        controllers = homeBloc.cleanFields(30);
+                      });
+
+                    }
+
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[300]),
+                  child: const Text(" borrar cliente",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Dorgan',
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w800,
+                      ))),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
              ],
         ),
 
        );
   },
   ),
-
-
     );
   }
 
   Widget _textFielWidget(String title, TextEditingController controller,
        int index) {
+    return Visibility(
+      visible: (!readyToDelivery && !editable) && (index == 23 ||index == 24 || index == 25 || index == 26 || index == 27
+      || index == 28 || index == 29) ? false : true,
+      child: Column(
+        children: [
+          Visibility(
+            visible: index == 0 || index == 3 || index == 8 || index == 16 || index == 21 || index == 23 ||
+            index  == 24,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  right: MediaQuery.of(context).size.width * 0.40),
+              child: Text(
+                index == 0 ? sectionTitles[0]: index == 3 ? sectionTitles[1] : index == 8 ? sectionTitles[2]
+                    : index == 16 ? sectionTitles[3] : index == 21 ? sectionTitles[4] :
+                index == 23 ? sectionTitles[5] : index == 24 ? sectionTitles[6] :"",
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Dorgan',
+                  fontStyle: FontStyle.italic,
+                ),
+                maxLines: 2,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Dorgan',
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ),
+          TextField(
+            readOnly: !editable,
+            controller: controller,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              fontFamily: 'Dorgan',
+              fontStyle: FontStyle.italic,
+            ),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              hintText: title,
+              hintStyle: const TextStyle(
+                color: Colors.grey,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w400,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                // Esquinas redondeadas
+                borderSide: const BorderSide(
+                  color: Colors.white, // Color del borde
+                  width: 2.0, // Ancho del borde
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+         Visibility(
+           visible: index == 20,
+           child: Column(
+             children: [
+               Padding(
+                 padding: const EdgeInsets.only(left: 10),
+                 child: Container(
+                   alignment: Alignment.centerLeft,
+                   child:  Text(
+                     "Progreso del pago ${controllers[18].text ?? ""}/${controllers[15].text ?? ""} cuotas",
+                     style: const TextStyle(
+                       color: Colors.black,
+                       fontFamily: 'Dorgan',
+                       fontSize: 12,
+                       fontStyle: FontStyle.italic,
+                       fontWeight: FontWeight.w800,
+                     ),
+                   ),
+                 ),
+               ),
+               const SizedBox(
+                 height: 10,
+               ),
+               Container(
+                   height: 50,
+                   decoration: BoxDecoration(
+                       border: Border.all(color: Colors.black),
+                       borderRadius: BorderRadius.circular(20)
+                   ),
+                   child: LinearProgressIndicator(
+                     value: progressBar,
+                     backgroundColor: Colors.white,
+                     valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                     borderRadius: BorderRadius.circular(20),
+                   )
+               ),
+               const SizedBox(
+                 height: 10,
+               ),
+             ],
+           ),
+         )
+        ],
+      ),
+    );
+  }
+   Widget selectableWidget(String title,int index) {
     return Column(
       children: [
         Visibility(
           visible: index == 0 || index == 3 || index == 8 || index == 16 || index == 21 || index == 23 ||
-          index  == 24,
-
+              index  == 24,
           child: Padding(
             padding: EdgeInsets.only(
                 right: MediaQuery.of(context).size.width * 0.40),
@@ -211,7 +397,7 @@ class _HomeAuxState extends State<HomeAux> {
           padding: const EdgeInsets.only(left: 10),
           child: Container(
             alignment: Alignment.centerLeft,
-            child: Text(
+            child:  Text(
               title,
               style: const TextStyle(
                 color: Colors.black,
@@ -223,31 +409,43 @@ class _HomeAuxState extends State<HomeAux> {
             ),
           ),
         ),
-        TextField(
-          readOnly: !editable,
-          controller: controller,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            fontFamily: 'Dorgan',
-            fontStyle: FontStyle.italic,
-          ),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            hintText: title,
-            hintStyle: const TextStyle(
-              color: Colors.grey,
-              fontFamily: 'Dorgan',
-              fontStyle: FontStyle.italic,
-              fontWeight: FontWeight.w400,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-              // Esquinas redondeadas
-              borderSide: const BorderSide(
-                color: Colors.white, // Color del borde
-                width: 2.0, // Ancho del borde
+        Container(
+          width: double.infinity,
+          height: 60,
+          child: InputDecorator(
+            decoration: const InputDecoration(border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20))
+            )),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: selectedPlanOption,
+                dropdownColor: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                hint: const Text("Selecciona un plan", style: TextStyle(
+                  color: Colors.grey,
+                  fontFamily: 'Dorgan',
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
+                ),),
+                items: options.map((String option) {
+                  return DropdownMenuItem<String>(
+                    value: option,
+                    child: Text(option),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    controllers[8].text = newValue  ?? "";
+                    selectedOption = newValue;
+                    if(selectedOption == "Ahorro" || selectedOption == "Planificado") {
+                      controllers[15].text = "24";
+                      readyToDelivery = false;
+                    } else {
+                      controllers[15].text = "8";
+                      readyToDelivery = true;
+                    }
+                  });
+                },
               ),
             ),
           ),
@@ -257,6 +455,87 @@ class _HomeAuxState extends State<HomeAux> {
         ),
       ],
     );
+   }
 
+  Widget selectableStatusWidget(String title,int index) {
+    return Column(
+      children: [
+        Visibility(
+          visible: index == 0 || index == 3 || index == 8 || index == 16 || index == 21 || index == 23 ||
+              index  == 24,
+          child: Padding(
+            padding: EdgeInsets.only(
+                right: MediaQuery.of(context).size.width * 0.40),
+            child: Text(
+              index == 0 ? sectionTitles[0]: index == 3 ? sectionTitles[1] : index == 8 ? sectionTitles[2]
+                  : index == 16 ? sectionTitles[3] : index == 21 ? sectionTitles[4] :
+              index == 23 ? sectionTitles[5] : index == 24 ? sectionTitles[6] :"",
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+              ),
+              maxLines: 2,
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Container(
+            alignment: Alignment.centerLeft,
+            child:  Text(
+              title,
+              style: const TextStyle(
+                color: Colors.black,
+                fontFamily: 'Dorgan',
+                fontSize: 12,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+        ),
+        Container(
+          width: double.infinity,
+          height: 60,
+          child: InputDecorator(
+            decoration: const InputDecoration(border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20))
+            )),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: selectedOption,
+                dropdownColor: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                hint: const Text("Selecciona el estatus", style: TextStyle(
+                  color: Colors.grey,
+                  fontFamily: 'Dorgan',
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
+                ),),
+                items: statusOptions.map((String option) {
+                  return DropdownMenuItem<String>(
+                    value: option,
+                    child: Text(option),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+
+                  });
+                },
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+      ],
+    );
   }
 }

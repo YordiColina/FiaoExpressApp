@@ -2,20 +2,28 @@ part of 'home_bloc.dart';
 
 abstract class HomeEvent extends Equatable {
  final List<TextEditingController> controllers;
-  const HomeEvent(this.controllers);
+ final BuildContext context;
+  const HomeEvent(this.controllers,this.context);
 
   @override
   List<Object> get props => [controllers]; // Equatable permite comparar objetos
 }
 class GetFieldValuesEvent extends HomeEvent {
- const GetFieldValuesEvent(super.controllers);
+ const GetFieldValuesEvent(super.controllers, super.context);
 
  @override
  List<Object> get props => [controllers];
 }
 
 class SetValuesEvent extends HomeEvent {
- const SetValuesEvent(super.controllers);
+ const SetValuesEvent(super.controllers, super.context);
+
+ @override
+ List<Object> get props => [controllers];
+}
+
+class DeleteClientEvent extends HomeEvent {
+  DeleteClientEvent(super.controllers, super.context);
 
  @override
  List<Object> get props => [controllers];

@@ -13,6 +13,15 @@ class PreHome extends StatefulWidget {
 class _PreHomeState extends State<PreHome> {
   TextEditingController searchController = TextEditingController();
   HomeBloc homeBloc = HomeBloc();
+  List<TextEditingController> controllers = [];
+  @override
+  void initState() {
+    if(searchController.text.isNotEmpty) {
+      controllers.add(searchController);
+      homeBloc.add(SetValuesEvent(controllers, context));
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +93,11 @@ class _PreHomeState extends State<PreHome> {
               visible: true,
               child: ElevatedButton(
                   onPressed: () {
-                    List<TextEditingController> controllers = [];
-                    controllers.add(searchController);
-                    homeBloc.add(SetValuesEvent(controllers));
+                    if(searchController.text.isNotEmpty) {
+
+                      controllers.add(searchController);
+                      homeBloc.add(SetValuesEvent(controllers,context));
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey[300]),
@@ -115,10 +126,10 @@ class _PreHomeState extends State<PreHome> {
                                context,
                                MaterialPageRoute(builder: (context) => BlocProvider.value(
                                  value: homeBloc,
-                                   child: const HomeAux())),
+                                   child:  HomeAux(clientData: state.fieldsController ?? [] ,))),
                              );
                            },
-                             child: productCard()),
+                             child: productCard(state.fieldsController ?? [])),
                          const SizedBox(
                            height: 20,
                          )
@@ -137,23 +148,23 @@ class _PreHomeState extends State<PreHome> {
     );
   }
 
-  Widget productCard () {
+  Widget productCard (List<TextEditingController> controllers) {
     return Container(
       height: 70,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.black)
       ),
-      child: const Column(
+      child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 5),
+            padding: const EdgeInsets.only(top: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 15),
-                  child: Text("nombre",style:TextStyle(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text(controllers.isNotEmpty ? controllers[3].text :"nombre",style:const TextStyle(
                     color: Colors.black,
                     fontFamily: 'Dorgan',
                     fontSize: 14,
@@ -162,8 +173,8 @@ class _PreHomeState extends State<PreHome> {
                   ) ,),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 20),
-                  child: Text("Moto",style:TextStyle(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: Text(controllers.isNotEmpty ? controllers[13].text :"Moto",style:const TextStyle(
                     color: Colors.black,
                     fontFamily: 'Dorgan',
                     fontSize: 14,
@@ -174,15 +185,15 @@ class _PreHomeState extends State<PreHome> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 15),
-                child: Text("plan",style:TextStyle(
+                padding: const EdgeInsets.only(left: 15),
+                child: Text(controllers.isNotEmpty ? controllers[8].text : "plan",style:const TextStyle(
                   color: Colors.black,
                   fontFamily: 'Dorgan',
                   fontSize: 14,
@@ -191,8 +202,8 @@ class _PreHomeState extends State<PreHome> {
                 ) ,),
               ),
               Padding(
-                padding: EdgeInsets.only(right: 20),
-                child: Text("contrato",style:TextStyle(
+                padding: const EdgeInsets.only(right: 20),
+                child: Text(controllers.isNotEmpty ? controllers[12].text : "modelo",style:const TextStyle(
                   color: Colors.black,
                   fontFamily: 'Dorgan',
                   fontSize: 14,
