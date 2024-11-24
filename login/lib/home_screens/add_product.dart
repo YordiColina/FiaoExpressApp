@@ -171,7 +171,7 @@ class _AddProductState extends State<AddProduct> {
                   visible: editable,
                   child: ElevatedButton(
                       onPressed: () {
-                        homeBloc.add(GetFieldValuesEvent(controllers,context));
+                        homeBloc.addProduct(controllers, 2, context);
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.grey[300]),
@@ -191,7 +191,7 @@ class _AddProductState extends State<AddProduct> {
                   visible: editable,
                   child: ElevatedButton(
                       onPressed: () {
-                        homeBloc.add(GetFieldValuesEvent(controllers,context));
+                        homeBloc.addProduct(controllers, 2, context);
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.grey[300]),
