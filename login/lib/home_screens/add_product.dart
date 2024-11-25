@@ -103,7 +103,7 @@ class _AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body:   BlocBuilder<HomeBloc, HomeState>(
+      body: BlocBuilder<HomeBloc, HomeState>(
 
         builder: (context, state) {
           return Padding(
@@ -171,7 +171,7 @@ class _AddProductState extends State<AddProduct> {
                   visible: editable,
                   child: ElevatedButton(
                       onPressed: () {
-                        homeBloc.addProduct(controllers, 2, context);
+                        homeBloc.addProduct(controllers, widget.indexProduct, context);
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.grey[300]),
@@ -191,7 +191,7 @@ class _AddProductState extends State<AddProduct> {
                   visible: editable,
                   child: ElevatedButton(
                       onPressed: () {
-                        homeBloc.addProduct(controllers, 2, context);
+                        homeBloc.addProduct(controllers, widget.indexProduct, context);
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.grey[300]),
@@ -438,9 +438,10 @@ class _AddProductState extends State<AddProduct> {
                 }).toList(),
                 onChanged: (String? newValue) {
                   setState(() {
+
                     controllers[8].text = newValue  ?? "";
-                    selectedOption = newValue;
-                    if(selectedOption == "Ahorro" || selectedOption == "Planificado") {
+                    selectedPlanOption = newValue;
+                    if(selectedPlanOption == "Ahorro" || selectedOption == "Planificado") {
                       controllers[15].text = "24";
                       readyToDelivery = false;
                     } else {
@@ -528,7 +529,8 @@ class _AddProductState extends State<AddProduct> {
                 }).toList(),
                 onChanged: (String? newValue) {
                   setState(() {
-
+                     controllers[23].text = newValue ?? "";
+                     selectedOption = newValue;
                   });
                 },
               ),

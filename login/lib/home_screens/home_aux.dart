@@ -436,8 +436,8 @@ class _HomeAuxState extends State<HomeAux> {
                 onChanged: (String? newValue) {
                   setState(() {
                     controllers[8].text = newValue  ?? "";
-                    selectedOption = newValue;
-                    if(selectedOption == "Ahorro" || selectedOption == "Planificado") {
+                    selectedPlanOption = newValue;
+                    if(selectedPlanOption == "Ahorro" || selectedOption == "Planificado") {
                       controllers[15].text = "24";
                       readyToDelivery = false;
                     } else {
@@ -525,6 +525,10 @@ class _HomeAuxState extends State<HomeAux> {
                 }).toList(),
                 onChanged: (String? newValue) {
                   setState(() {
+
+                    controllers[23].text = newValue  ?? "";
+                      selectedOption = newValue;
+
 
                   });
                 },

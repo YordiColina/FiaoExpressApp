@@ -23,6 +23,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<GetFieldValuesEvent>(_createUser);
     on<SetValuesEvent>(_getUser);
     on<DeleteClientEvent>(_deleteClient);
+    on<GetProductEvent>(_getDataProduct);
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -85,7 +86,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 fieldsController: event.controllers));
         await _clientes
             .doc(state.datosCliente?.cedula)
-            .set(state.toMap());
+            .set(state.toMap(),SetOptions(merge: true));
+
         print(state.toMap());
         mostrarFlushbar(event.context, "Cliente añadido/editado con éxito", false);
       } else {
@@ -114,13 +116,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         };
 
         // Crea un mapa con los datos del cliente
-        Map<String, dynamic> datosCliente = {
-          'nombre': controllers[3].text,
-          'cédula': controllers[4].text,
-          'teléfono': controllers[5].text,
-          'ubicación': controllers[6].text,
-          'dirección': controllers[7].text,
-        };
+
 
         Map<String, dynamic> grupo_inscrito = {
           'plan': controllers[8].text,
@@ -162,7 +158,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         // Combina los dos mapas en un solo documento
         Map<String, dynamic> documentoCompleto = {
           'datosContrato $index': datosContrato,
-          'datosCliente $index': datosCliente,
           'grupo_inscrito $index': grupo_inscrito,
           'pagos_realizados $index': pagosRealizados,
           'pago_de_morosidad $index': pago_de_morosidad,
@@ -173,7 +168,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         // Agrega el documento a Firestore
         await clientes
             .doc(controllers[4].text)
-            .set(documentoCompleto);
+            .set(documentoCompleto); SetOptions(merge: true);
         ocultarLoading(context);
         print('Documento creado exitosamente');
 
@@ -285,12 +280,123 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           dataController[28].text = bikeDeliveryData['placa'];
           dataController[29].text = bikeDeliveryData['observacion'];
         }
-        emit(state.copyWith(fieldsController: dataController));
+        emit(state.copyWith(fieldsController: dataController,
+        status: true));
       }
     } catch (e) {
       print(e);
     }
   }
+
+  Future<bool> checkProduct(int index, TextEditingController controller) async {
+    bool exist = false;
+
+    try {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('clientes')
+          .doc(controller.text)
+          .get();
+
+      if (doc.exists) {
+        Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+
+        if (data != null && data.containsKey('datosContrato $index')) {
+          exist = true;
+          print("El campo datosContrato $index existe: ${data['datosContrato $index']}");
+        } else {
+          print("El campo datosContrato $index no existe");
+        }
+      } else {
+        print("El documento no existe");
+      }
+    } catch (e) {
+      print("Error al verificar el producto: $e");
+    }
+
+    return exist;
+  }
+
+  Future<void> _getDataProduct(GetProductEvent event,
+      Emitter<HomeState> emit,) async {
+    print("si disparo el evento");
+    try {
+      CollectionReference clientes =
+      FirebaseFirestore.instance.collection('clientes');
+      QuerySnapshot querySnapshot = await clientes
+          .where('datosCliente.cédula', isEqualTo: event.controllers[0].text)
+          .get();
+        print("siuuuuuuuu");
+        List<TextEditingController> dataController = [];
+
+
+        for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+          // Obtiene los datos del documento completo
+          Map<String, dynamic> datos = doc.data() as Map<String, dynamic>;
+          for(int i = 0; i < 30; i++) {
+            dataController.add(TextEditingController());
+          }
+          // Extrae los datos del contrato
+          Map<String, dynamic> contractData = datos['datosContrato ${event.index}'];
+          dataController[0].text = contractData['contratoNo'];
+          dataController[1].text = contractData['fechaContrato'];
+          dataController[2].text = contractData['asesor'];
+
+          // Extrae los datos del cliente
+          Map<String, dynamic> clientData = datos['datosCliente'];
+          dataController[3].text = clientData['nombre'];
+          dataController[4].text = clientData['cédula'];
+          dataController[5].text = clientData['teléfono'];
+          dataController[6].text = clientData['ubicación'];
+          dataController[7].text = clientData['dirección'];
+
+          Map<String, dynamic> selectedGroup = datos['grupo_inscrito ${event.index}'];
+          dataController[8].text = selectedGroup['plan'];
+          dataController[9].text = selectedGroup['grupo'];
+          dataController[10].text = selectedGroup['nro_de_lista'];
+          dataController[11].text = selectedGroup['posicion_en_la_lista'];
+          dataController[12].text = selectedGroup['modelo_de_moto'];
+          dataController[13].text = selectedGroup['marca_de_moto'];
+          dataController[14].text = selectedGroup['valor_cuota_mensual_en_dolares'];
+          dataController[15].text = selectedGroup['nro_de_cuotas_totales'];
+
+
+          Map<String, dynamic> successPayments = datos['pagos_realizados ${event.index}'];
+          dataController[16].text = successPayments['cuotaInicial'];
+          dataController[17].text = successPayments['gastosADM'];
+          dataController[18].text = successPayments['nro_de_cuotas_canceladas'];
+          dataController[19].text = successPayments['nro_de_cuotas_restantes'];
+          dataController[20].text = successPayments["proxima_fecha_de_pago"];
+
+          Map<String, dynamic> latePayment = datos['pago_de_morosidad ${event.index}'];
+          dataController[21].text = latePayment['díasDeRetraso'];
+          dataController[22].text = latePayment['morosidad'];
+
+          Map<String, dynamic> fiaoExpressStatus =
+          datos['estatus_en_fiaoExpress ${event.index}'];
+          dataController[23].text = fiaoExpressStatus['estatus'];
+
+
+          Map<String, dynamic> bikeDeliveryData =
+          datos['datos_de_entrega_de_la_moto ${event.index}'];
+          dataController[24].text = bikeDeliveryData['color'];
+          dataController[25].text = bikeDeliveryData['fecha_de_entrega'];
+          dataController[26].text = bikeDeliveryData['serialMotor'];
+          dataController[27].text = bikeDeliveryData['serialCarroceria'];
+          dataController[28].text = bikeDeliveryData['placa'];
+          dataController[29].text = bikeDeliveryData['observacion'];
+        }
+       event.index == 2 ? emit(state.copyWith(productTwoData: dataController)) :
+       emit(state.copyWith(productThreeData: dataController));
+
+        print("Estado actual productTwoData: ${state.productTwoData} ${event.index}");
+
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
+
 
 
   String getCurrentUserEmail() {

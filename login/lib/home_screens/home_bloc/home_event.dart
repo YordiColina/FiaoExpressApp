@@ -28,3 +28,11 @@ class DeleteClientEvent extends HomeEvent {
  @override
  List<Object> get props => [controllers];
 }
+
+class GetProductEvent extends HomeEvent {
+ final int index;
+ const GetProductEvent(super.controllers, super.context, this.index);
+
+ @override
+ List<Object> get props => [controllers,index];
+}

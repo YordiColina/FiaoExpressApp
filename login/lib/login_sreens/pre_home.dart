@@ -14,6 +14,9 @@ class PreHome extends StatefulWidget {
 class _PreHomeState extends State<PreHome> {
   TextEditingController searchController = TextEditingController();
   HomeBloc homeBloc = HomeBloc();
+  bool twoProducts = false;
+  bool threeProducts = false;
+  int listSize = 0;
   List<TextEditingController> controllers = [];
   @override
   void initState() {
@@ -93,11 +96,29 @@ class _PreHomeState extends State<PreHome> {
             Visibility(
               visible: true,
               child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if(searchController.text.isNotEmpty) {
 
                       controllers.add(searchController);
                       homeBloc.add(SetValuesEvent(controllers,context));
+                     twoProducts = await homeBloc.checkProduct(2, searchController);
+                     threeProducts = await homeBloc.checkProduct(3, searchController);
+                     setState(() {
+                       if(state.status == true && !twoProducts && !threeProducts) {
+                         listSize = 1;
+                       } else if (twoProducts && !threeProducts) {
+                         listSize = 2;
+                         homeBloc.add(GetProductEvent(controllers, context, listSize));
+                         print("MANDAMOS EL 2");
+                       } else if(threeProducts) {
+                         listSize = 3;
+                         homeBloc.add(GetProductEvent(controllers, context, listSize));
+                       } else {
+                         listSize = 0;
+                       }
+                     });
+
+                     print("se encontro 2 productos $twoProducts y tres? $threeProducts");
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -117,7 +138,7 @@ class _PreHomeState extends State<PreHome> {
             Expanded(
               child: ListView(
                 children: List.generate(
-                  2,
+                  listSize,
                       (index) =>
                      Column(
                        children: [
@@ -127,22 +148,31 @@ class _PreHomeState extends State<PreHome> {
                                context,
                                MaterialPageRoute(builder: (context) => BlocProvider.value(
                                  value: homeBloc,
-                                   child:  HomeAux(clientData: state.fieldsController ?? [] ,))),
+                                   child: index == 0 ? HomeAux(clientData: state.fieldsController ?? []) :
+                                       index == 1 ? HomeAux(clientData: state.productTwoData ?? []) :
+                                       HomeAux(clientData: state.productThreeData ?? [])
+                               )
+
+                               ),
                              );
                            },
-                             child: productCard(state.fieldsController ?? [])),
+                             child: index == 0 ? productCard(state.fieldsController ?? []) :
+                             index  == 1 ? productCard(state.productTwoData ?? []) : productCard(state.productThreeData ?? [])
+
+
+                         ),
                          const SizedBox(
                            height: 20,
                          ),
                          Visibility(
-                           visible: index == 1,
+                           visible: index == listSize -1 && listSize != 0,
                              child: GestureDetector(
                                onTap: () {
                                  Navigator.push(
                                    context,
                                    MaterialPageRoute(builder: (context) => BlocProvider.value(
                                        value: homeBloc,
-                                       child:  AddProduct(clientData: state.fieldsController ?? [] ,indexProduct: 2,))),
+                                       child:  AddProduct(clientData: state.fieldsController ?? [] ,indexProduct: listSize == 1 ? 2 : 3,))),
                                  );
                                },
                                child: Container(
