@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login/home_screens/add_product.dart';
@@ -19,11 +20,24 @@ class _PreHomeState extends State<PreHome> {
   LoginBloc bloc = LoginBloc();
   String userEmail = "";
   bool canCreate = false;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
   bool threeProducts = false;
   int listSize = 0;
   List<TextEditingController> controllers = [];
   @override
   void initState() {
+    getToken();
+    _requestPermission();
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Mensaje recibido: ${message.notification?.title}');
+      // Aquí puedes mostrar un diálogo o una notificación local
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('Mensaje clickeado: ${message.notification?.title}');
+      // Aquí puedes redirigir al usuario a otra pantalla
+    });
     if(searchController.text.isNotEmpty) {
       controllers.add(searchController);
       homeBloc.add(SetValuesEvent(controllers, context));
@@ -312,5 +326,24 @@ class _PreHomeState extends State<PreHome> {
         ],
       ),
     );
+  }
+
+  void _requestPermission() async {
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('Permisos otorgados');
+    } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      print('Permisos denegados');
+    }
+  }
+
+  void getToken() async {
+    String? token = await messaging.getToken();
+    print("FCM Token: $token");
   }
 }

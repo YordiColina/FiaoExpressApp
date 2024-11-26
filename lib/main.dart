@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:login/home_screens/home_screen.dart';
 import 'package:login/login_sreens/login_screen.dart';
@@ -10,7 +11,13 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // Maneja mensajes en segundo plano
+  print('Mensaje en segundo plano: ${message.messageId}');
 }
 
 class MyApp extends StatelessWidget {
