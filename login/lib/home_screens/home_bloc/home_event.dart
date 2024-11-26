@@ -9,13 +9,15 @@ abstract class HomeEvent extends Equatable {
   List<Object> get props => [controllers]; // Equatable permite comparar objetos
 }
 class GetFieldValuesEvent extends HomeEvent {
- const GetFieldValuesEvent(super.controllers, super.context);
+ final int index;
+ const GetFieldValuesEvent(super.controllers, super.context, this.index);
 
  @override
- List<Object> get props => [controllers];
+ List<Object> get props => [controllers,index];
 }
 
 class SetValuesEvent extends HomeEvent {
+
  const SetValuesEvent(super.controllers, super.context);
 
  @override

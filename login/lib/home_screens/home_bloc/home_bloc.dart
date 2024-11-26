@@ -83,10 +83,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 serialCarroceria: event.controllers[27].text,
                 placa: event.controllers[28].text,
                 observacion: event.controllers[29].text),
-                fieldsController: event.controllers));
+                ));
+          event.index == 0 ? emit(state.copyWith(fieldsController: event.controllers)) :
+              event.index == 2 ? emit(state.copyWith(productTwoData: event.controllers)) :
+              emit(state.copyWith(productThreeData: event.controllers));
+
+        event.index == 0 ? await _clientes
+            .doc(state.datosCliente?.cedula)
+            .set(state.toMap(),SetOptions(merge: true)) : event.index == 2 ?
         await _clientes
             .doc(state.datosCliente?.cedula)
-            .set(state.toMap(),SetOptions(merge: true));
+            .set(state.toMapTwo(),SetOptions(merge: true)) :
+        await _clientes
+            .doc(state.datosCliente?.cedula)
+            .set(state.toMapThree(),SetOptions(merge: true));
 
         print(state.toMap());
         mostrarFlushbar(event.context, "Cliente añadido/editado con éxito", false);
@@ -99,95 +109,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       print(e);
     }
   }
-
-
-  Future<void> addProduct(List<TextEditingController> controllers,
-      int index, BuildContext context) async {
-    // Referencia a la colección donde se almacenarán los documentos
-    CollectionReference clientes =
-    FirebaseFirestore.instance.collection('clientes');
-    if (controllers.isNotEmpty) {
-      try {
-        // Crea un mapa con los datos del contrato
-        Map<String, dynamic> datosContrato = {
-          'contratoNo': controllers[0].text,
-          'fechaContrato': controllers[1].text,
-          'asesor': controllers[2].text,
-        };
-
-        // Crea un mapa con los datos del cliente
-
-
-        Map<String, dynamic> grupo_inscrito = {
-          'plan': controllers[8].text,
-          'grupo': controllers[9].text,
-          'nro_de_lista': controllers[10].text,
-          'posicion_en_la_lista': controllers[11].text,
-          'modelo_de_moto': controllers[12].text,
-          'marca_de_moto': controllers[13].text,
-          'valor_cuota_mensual_en_dolares': controllers[14].text,
-          'nro_de_cuotas_totales': controllers[15].text
-        };
-
-        Map<String, dynamic> pagosRealizados = {
-          'cuotaInicial': controllers[16].text,
-          'gastosADM': controllers[17].text,
-          'nro_de_cuotas_canceladas': controllers[18].text,
-          'nro_de_cuotas_restantes': controllers[19].text,
-          'proxima_fecha_de_pago': controllers[20].text
-        };
-
-        Map<String, dynamic> pago_de_morosidad = {
-          'díasDeRetraso': controllers[21].text,
-          'morosidad': controllers[22].text,
-        };
-
-        Map<String, dynamic> estatus_en_fiaoExpress = {
-          'estatus': controllers[23].text,
-        };
-
-        Map<String, dynamic> datos_de_entrega_de_la_moto = {
-          'fecha_de_entrega': controllers[24].text,
-          'color': controllers[25].text,
-          'serialMotor': controllers[26].text,
-          'serialCarroceria': controllers[27].text,
-          'placa': controllers[28].text,
-          'observacion': controllers[29].text
-        };
-
-        // Combina los dos mapas en un solo documento
-        Map<String, dynamic> documentoCompleto = {
-          'datosContrato $index': datosContrato,
-          'grupo_inscrito $index': grupo_inscrito,
-          'pagos_realizados $index': pagosRealizados,
-          'pago_de_morosidad $index': pago_de_morosidad,
-          'estatus_en_fiaoExpress $index': estatus_en_fiaoExpress,
-          'datos_de_entrega_de_la_moto $index': datos_de_entrega_de_la_moto,
-        };
-
-        // Agrega el documento a Firestore
-        await clientes
-            .doc(controllers[4].text)
-            .set(documentoCompleto); SetOptions(merge: true);
-        ocultarLoading(context);
-        print('Documento creado exitosamente');
-
-      } catch (e) {
-        ocultarLoading(context);
-        mostrarFlushbar(context, "Error al crear cliente", true);
-        print('Error al crear el documento: $e');
-      }
-    } else {
-      ocultarLoading(context);
-      mostrarFlushbar(context, "Compruebe que los campos esten completos", true);
-    }
-  }
-
-
-
-
-
-
 
   Future<void> _deleteClient(
       DeleteClientEvent event,

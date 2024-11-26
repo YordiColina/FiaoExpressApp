@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login/home_screens/add_product.dart';
 import 'package:login/home_screens/home_aux.dart';
+import '../bloc/login_bloc.dart';
 import '../home_screens/home_bloc/home_bloc.dart';
 
 class PreHome extends StatefulWidget {
@@ -15,6 +16,9 @@ class _PreHomeState extends State<PreHome> {
   TextEditingController searchController = TextEditingController();
   HomeBloc homeBloc = HomeBloc();
   bool twoProducts = false;
+  LoginBloc bloc = LoginBloc();
+  String userEmail = "";
+  bool canCreate = false;
   bool threeProducts = false;
   int listSize = 0;
   List<TextEditingController> controllers = [];
@@ -23,6 +27,14 @@ class _PreHomeState extends State<PreHome> {
     if(searchController.text.isNotEmpty) {
       controllers.add(searchController);
       homeBloc.add(SetValuesEvent(controllers, context));
+    }
+
+    userEmail = bloc.getCurrentUserEmail();
+    print(userEmail);
+    if(userEmail != "fiaoexpressapp@gmail.com") {
+      canCreate = false;
+    } else {
+      canCreate = true;
     }
     super.initState();
   }
@@ -112,6 +124,7 @@ class _PreHomeState extends State<PreHome> {
                          print("MANDAMOS EL 2");
                        } else if(threeProducts) {
                          listSize = 3;
+                         homeBloc.add(GetProductEvent(controllers, context, listSize-1));
                          homeBloc.add(GetProductEvent(controllers, context, listSize));
                        } else {
                          listSize = 0;
@@ -135,61 +148,92 @@ class _PreHomeState extends State<PreHome> {
             const SizedBox(
               height: 20,
             ),
-            Expanded(
-              child: ListView(
-                children: List.generate(
-                  listSize,
-                      (index) =>
-                     Column(
-                       children: [
-                         GestureDetector(
-                           onTap: () {
-                             Navigator.push(
-                               context,
-                               MaterialPageRoute(builder: (context) => BlocProvider.value(
-                                 value: homeBloc,
-                                   child: index == 0 ? HomeAux(clientData: state.fieldsController ?? []) :
-                                       index == 1 ? HomeAux(clientData: state.productTwoData ?? []) :
-                                       HomeAux(clientData: state.productThreeData ?? [])
-                               )
+            Visibility(
+              visible: canCreate,
+              child: ElevatedButton(
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => BlocProvider.value(
+                          value: homeBloc,
+                          child:  HomeAux(clientData: state.fieldsController ?? [],indexProduct: 0,)
+                      )
 
-                               ),
-                             );
-                           },
-                             child: index == 0 ? productCard(state.fieldsController ?? []) :
-                             index  == 1 ? productCard(state.productTwoData ?? []) : productCard(state.productThreeData ?? [])
-
-
-                         ),
-                         const SizedBox(
-                           height: 20,
-                         ),
-                         Visibility(
-                           visible: index == listSize -1 && listSize != 0,
-                             child: GestureDetector(
-                               onTap: () {
-                                 Navigator.push(
-                                   context,
-                                   MaterialPageRoute(builder: (context) => BlocProvider.value(
-                                       value: homeBloc,
-                                       child:  AddProduct(clientData: state.fieldsController ?? [] ,indexProduct: listSize == 1 ? 2 : 3,))),
-                                 );
-                               },
-                               child: Container(
-                                   height: 50,
-                                   width: 50,
-                                   decoration: BoxDecoration(
-                                     border: Border.all(color: Colors.black),
-                                     borderRadius: BorderRadius.circular(50)
-
-                                   ),
-                                   child: const Icon(Icons.add,size: 50,)),
-                             ))
-                       ],
-                     )
                       ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[300]),
+                  child: const Text(" Crear cliente ",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Dorgan',
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w800,
+                      ))),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Visibility(
+              visible: state.status == true,
+              child: Expanded(
+                child: ListView(
+                  children: List.generate(
+                    listSize,
+                        (index) =>
+                       Column(
+                         children: [
+                           GestureDetector(
+                             onTap: () {
+                               Navigator.push(
+                                 context,
+                                 MaterialPageRoute(builder: (context) => BlocProvider.value(
+                                   value: homeBloc,
+                                     child: index == 0 ? HomeAux(clientData: state.fieldsController ?? [],indexProduct: index,) :
+                                         index == 1 ? HomeAux(clientData: state.productTwoData ?? [],indexProduct: index+1,) :
+                                         HomeAux(clientData: state.productThreeData ?? [],indexProduct: index+1,)
+                                 )
+
+                                 ),
+                               );
+                             },
+                               child: index == 0 ? productCard(state.fieldsController ?? []) :
+                               index  == 1 ? productCard(state.productTwoData ?? []) : productCard(state.productThreeData ?? [])
+
+
+                           ),
+                           const SizedBox(
+                             height: 20,
+                           ),
+                           Visibility(
+                             visible: index == listSize -1 && listSize != 0,
+                               child: GestureDetector(
+                                 onTap: () {
+                                   Navigator.push(
+                                     context,
+                                     MaterialPageRoute(builder: (context) => BlocProvider.value(
+                                         value: homeBloc,
+                                         child:  AddProduct(clientData: state.fieldsController ?? [] ,indexProduct: listSize == 1 ? 2 : 3,))),
+                                   );
+                                 },
+                                 child: Container(
+                                     height: 50,
+                                     width: 50,
+                                     decoration: BoxDecoration(
+                                       border: Border.all(color: Colors.black),
+                                       borderRadius: BorderRadius.circular(50)
+
+                                     ),
+                                     child: const Icon(Icons.add,size: 50,)),
+                               ))
+                         ],
+                       )
+                        ),
+                  ),
                 ),
-              ),
+            ),
           ],
         ),
       );

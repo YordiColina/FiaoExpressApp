@@ -5,7 +5,8 @@ import 'package:login/home_screens/home_bloc/home_bloc.dart';
 
 class HomeAux extends StatefulWidget {
  final List<TextEditingController> clientData;
-  const HomeAux({super.key, required this.clientData});
+ final int indexProduct;
+  const HomeAux({super.key, required this.clientData, required this.indexProduct});
 
   @override
   State<HomeAux> createState() => _HomeAuxState();
@@ -74,10 +75,11 @@ class _HomeAuxState extends State<HomeAux> {
 
   @override
   void initState() {
+    print("numero de cliente ${widget.indexProduct}");
     for (var i = 0; i <= labels.length; i++) {
       controllers.add(TextEditingController());
     }
-    if(widget.clientData != null) {
+    if(widget.clientData != null && widget.clientData.isNotEmpty) {
       controllers = widget.clientData;
       selectedPlanOption = widget.clientData[8].text.trim();
       selectedOption = widget.clientData[23].text.trim();
@@ -169,7 +171,7 @@ class _HomeAuxState extends State<HomeAux> {
               visible: editable,
               child: ElevatedButton(
                   onPressed: () {
-                    homeBloc.add(GetFieldValuesEvent(controllers,context));
+                    homeBloc.add(GetFieldValuesEvent(controllers,context,widget.indexProduct));
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey[300]),
@@ -189,7 +191,7 @@ class _HomeAuxState extends State<HomeAux> {
               visible: editable,
               child: ElevatedButton(
                   onPressed: () {
-                    homeBloc.add(GetFieldValuesEvent(controllers,context));
+                    homeBloc.add(GetFieldValuesEvent(controllers,context,widget.indexProduct));
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey[300]),

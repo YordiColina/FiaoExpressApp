@@ -73,5 +73,27 @@ class HomeState extends Equatable {
       // Convierte otras propiedades a mapas...
     };
   }
+  Map<String, dynamic> toMapTwo() {
+    return {
+      'datosContrato 2': datosContrato?.toMap(),
+      'grupo_inscrito 2': grupoInscrito?.toMap(),
+      'pago_de_morosidad 2': pagoMoroso?.toMap(),
+      'pagos_realizados 2': pagosRealizados?.toMap(),
+      'estatus_en_fiaoExpress 2': fiaoEstatus?.toMap(),
+      'datos_de_entrega_de_la_moto 2': datosEntregaMoto?.toMap()
+      // Convierte otras propiedades a mapas...
+    };
+  }
+  Map<String, dynamic> toMapThree() {
+    return {
+      'datosContrato 3': datosContrato?.toMap(),
+      'grupo_inscrito 3': grupoInscrito?.toMap(),
+      'pago_de_morosidad 3': pagoMoroso?.toMap(),
+      'pagos_realizados 3': pagosRealizados?.toMap(),
+      'estatus_en_fiaoExpress 3': fiaoEstatus?.toMap(),
+      'datos_de_entrega_de_la_moto 3': datosEntregaMoto?.toMap()
+      // Convierte otras propiedades a mapas...
+    };
+  }
 }
 
