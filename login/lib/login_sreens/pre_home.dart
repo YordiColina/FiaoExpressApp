@@ -29,10 +29,7 @@ class _PreHomeState extends State<PreHome> {
     getToken();
     _requestPermission();
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Mensaje recibido: ${message.notification?.title}');
-      // Aquí puedes mostrar un diálogo o una notificación local
-    });
+
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('Mensaje clickeado: ${message.notification?.title}');

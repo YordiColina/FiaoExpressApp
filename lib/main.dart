@@ -1,3 +1,4 @@
+import 'package:fiao_express_app/utils/firebase_local_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -11,14 +12,15 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseNotifications().initialize();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
 }
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Maneja mensajes en segundo plano
-  print('Mensaje en segundo plano: ${message.messageId}');
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Mensaje recibido en segundo plano: ${message.notification?.title}");
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
