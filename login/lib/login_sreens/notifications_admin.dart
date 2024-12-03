@@ -100,8 +100,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 itemBuilder: (context, index) {
                   final client = _clients[index];
                   return ListTile(
-                    title: Text(client['name']),
-                    subtitle: Text('Token: ${client['fcm']}'),
+                    title: Text(client['nombre']),
+                    subtitle: Text('cédula: ${client['id']}'),
                     trailing: IconButton(
                       icon: Icon(Icons.send),
                       onPressed: () =>

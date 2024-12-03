@@ -8,13 +8,27 @@ class TokenService {
     try {
       final querySnapshot = await _firestore.collection('clientes').get();
 
-      return querySnapshot.docs.map((doc) {
-        print(" este es el token papu  :  = ${doc.get("tokenFCM")} xdddd");
+      List<Map<String, dynamic>> tokenData = querySnapshot.docs.map((doc) {
+        final data = doc.data(); // Obtiene los datos del documento
+        final tokenFCM = data.containsKey('tokenFCM') ? data['tokenFCM'] : null;
+        print(data['datosCliente']['nombre']);
+        if (tokenFCM != null) {
+          print("Este es el token papu: $tokenFCM xdddd");
+        } else {
+          print("El documento con ID ${doc.id} no contiene el campo tokenFCM.");
+        }
         return {
           'id': doc.id,
-          'fcm': doc.get("tokenFCM") ?? '',
+          'nombre' : data['datosCliente']['nombre'],
+          'fcm': tokenFCM ?? '', // Retorna una cadena vacía si no existe
         };
       }).where((client) => client['fcm'].isNotEmpty).toList();
+
+      print(tokenData);
+
+
+      return tokenData;
+
     } catch (e) {
       print('Error al obtener los tokens: $e');
       return [];
