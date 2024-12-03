@@ -1,8 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:login/data/service/FCM_service.dart';
 import 'package:login/home_screens/add_product.dart';
 import 'package:login/home_screens/home_aux.dart';
+import 'package:login/login_sreens/notifications_admin.dart';
 import '../bloc/login_bloc.dart';
 import '../home_screens/home_bloc/home_bloc.dart';
 
@@ -121,7 +123,7 @@ class _PreHomeState extends State<PreHome> {
               child: ElevatedButton(
                   onPressed: () async {
                     if(searchController.text.isNotEmpty) {
-
+                      FCMService().obtenerYActualizarToken(searchController.text);
                       controllers.add(searchController);
                       homeBloc.add(SetValuesEvent(controllers,context));
                      twoProducts = await homeBloc.checkProduct(2, searchController);
@@ -135,6 +137,7 @@ class _PreHomeState extends State<PreHome> {
                          print("MANDAMOS EL 2");
                        } else if(threeProducts) {
                          listSize = 3;
+                         homeBloc.add(GetProductEvent(controllers, context, listSize-2));
                          homeBloc.add(GetProductEvent(controllers, context, listSize-1));
                          homeBloc.add(GetProductEvent(controllers, context, listSize));
                        } else {
@@ -184,7 +187,35 @@ class _PreHomeState extends State<PreHome> {
                         fontWeight: FontWeight.w800,
                       ))),
             ),
-            SizedBox(
+            const SizedBox(
+              height: 20,
+            ),
+            Visibility(
+              visible: canCreate,
+              child: ElevatedButton(
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => BlocProvider.value(
+                          value: homeBloc,
+                          child:  NotificationScreen()
+                      )
+
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[300]),
+                  child: const Text("Crear notificación",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Dorgan',
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w800,
+                      ))),
+            ),
+            const SizedBox(
               height: 20,
             ),
             Visibility(
