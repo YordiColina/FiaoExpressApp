@@ -31,7 +31,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Future<void> _sendNotificationToClient(String token) async {
     if (_titleController.text.isEmpty || _bodyController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Por favor, ingresa un título y un mensaje.')),
+        const SnackBar(content: Text('Por favor, ingresa un título y un mensaje.')),
       );
       return;
     }
@@ -41,21 +41,23 @@ class _NotificationScreenState extends State<NotificationScreen> {
         title: _titleController.text,
         body: _bodyController.text,
         token: token,
+        imageUrl: "https://drive.google.com/uc?id=1DXcehHaQWwxzmHKiWhbrQwBDiuEdLcVU"
       );
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Notificación enviada.')),
+        const SnackBar(content: Text('Notificación enviada.')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al enviar la notificación: $e')),
       );
+      print(e);
     }
   }
 
   Future<void> _sendNotificationToAll() async {
     if (_titleController.text.isEmpty || _bodyController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Por favor, ingresa un título y un mensaje.')),
+        const SnackBar(content: Text('Por favor, ingresa un título y un mensaje.')),
       );
       return;
     }
@@ -65,15 +67,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Notificaciones enviadas a todos los clientes.')),
+      const SnackBar(content: Text('Notificaciones enviadas a todos los clientes.')),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Enviar Notificaciones'),
+        backgroundColor: Colors.white,
+        title: const Text('Enviar Notificaciones'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -81,19 +85,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
           children: [
             TextField(
               controller: _titleController,
-              decoration: InputDecoration(labelText: 'Título'),
+              decoration: const InputDecoration(labelText: 'Título'),
             ),
             TextField(
               controller: _bodyController,
-              decoration: InputDecoration(labelText: 'Mensaje'),
+              decoration: const InputDecoration(labelText: 'Mensaje'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _loadClients,
-              child: Text('Cargar Clientes'),
+              child: const Text('Cargar Clientes'),
             ),
             _loading
-                ? CircularProgressIndicator()
+                ? const CircularProgressIndicator()
                 : Expanded(
               child: ListView.builder(
                 itemCount: _clients.length,
@@ -103,7 +107,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     title: Text(client['nombre']),
                     subtitle: Text('cédula: ${client['id']}'),
                     trailing: IconButton(
-                      icon: Icon(Icons.send),
+                      icon: const Icon(Icons.send),
                       onPressed: () =>
                           _sendNotificationToClient(client['fcm']),
                     ),
@@ -111,10 +115,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 },
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _sendNotificationToAll,
-              child: Text('Enviar a Todos'),
+              child: const Text('Enviar a Todos'),
             ),
           ],
         ),

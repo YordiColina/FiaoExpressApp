@@ -44,8 +44,8 @@ class TokenService {
       if (documentSnapshot.exists) {
         return {
           'id': documentSnapshot.id,
-          'name': documentSnapshot.data()?['name'] ?? 'Sin Nombre',
-          'fcm': documentSnapshot.data()?['fcm'] ?? '',
+          'name': documentSnapshot.data()?['nombre'] ?? 'Sin Nombre',
+          'fcm': documentSnapshot.data()?['tokenFCM'] ?? '',
         };
       } else {
         print('El cliente con ID $documentId no existe.');

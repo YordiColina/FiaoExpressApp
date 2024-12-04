@@ -9,8 +9,9 @@ class FirebaseNotifications {
     // Configuración del canal de notificaciones
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'default_channel', // ID del canal
-      'Notificaciones',  // Nombre del canal
-      description: 'Canal para mostrar notificaciones importantes', // Descripción
+      'Notificaciones', // Nombre del canal
+      description: 'Canal para mostrar notificaciones importantes',
+      // Descripción
       importance: Importance.high,
     );
 
@@ -45,7 +46,6 @@ class FirebaseNotifications {
     });
   }
 
-  // Mostrar la notificación local
   Future<void> _showNotification({String? title, String? body}) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
@@ -53,9 +53,16 @@ class FirebaseNotifications {
       'Notificaciones',  // Nombre del canal
       importance: Importance.high,
       priority: Priority.high,
+      icon: '@mipmap/ic_launcher',
+      styleInformation: BigPictureStyleInformation(
+        DrawableResourceAndroidBitmap('icon'), // Sin extensión
+        largeIcon: DrawableResourceAndroidBitmap('icon'), // Sin extensión
+      ),
     );
+
     const NotificationDetails platformChannelSpecifics =
     NotificationDetails(android: androidPlatformChannelSpecifics);
+
     await _localNotificationsPlugin.show(
       0, // ID de la notificación
       title,
@@ -63,7 +70,10 @@ class FirebaseNotifications {
       platformChannelSpecifics,
     );
   }
+
+
 }
+
 
 // Manejador de mensajes en segundo plano, fuera de la clase
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
