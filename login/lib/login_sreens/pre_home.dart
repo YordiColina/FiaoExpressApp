@@ -119,7 +119,6 @@ class _PreHomeState extends State<PreHome> {
                 setState(() {
                   if(value.isNotEmpty && value != "") {
                     emptySearch = false;
-                    print("your mom");
                   } else {
                     emptySearch = true;
                   }
