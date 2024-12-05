@@ -26,6 +26,7 @@ class _PreHomeState extends State<PreHome> {
   bool threeProducts = false;
   int listSize = 0;
   List<TextEditingController> controllers = [];
+  bool emptySearch = true;
   @override
   void initState() {
     getToken();
@@ -114,6 +115,16 @@ class _PreHomeState extends State<PreHome> {
                   ),
                 ),
               ),
+              onChanged: (value) {
+                setState(() {
+                  if(value.isNotEmpty && value != "") {
+                    emptySearch = false;
+                    print("your mom");
+                  } else {
+                    emptySearch = true;
+                  }
+                });
+              },
             ),
             const SizedBox(
               height: 20,
@@ -149,7 +160,8 @@ class _PreHomeState extends State<PreHome> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300]),
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.black)),
                   child: const Text(" Cargar ",
                       style: TextStyle(
                         color: Colors.black,
@@ -163,33 +175,40 @@ class _PreHomeState extends State<PreHome> {
               height: 20,
             ),
             Visibility(
-              visible: canCreate,
-              child: ElevatedButton(
-                  onPressed: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => BlocProvider.value(
-                          value: homeBloc,
-                          child:  HomeAux(clientData: state.fieldsController ?? [],indexProduct: 0,)
-                      )
+              visible: canCreate && emptySearch,
+              child: Column(
+                children: [
+                  ElevatedButton(
+                      onPressed: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => BlocProvider.value(
+                              value: homeBloc,
+                              child:  HomeAux(clientData: state.fieldsController ?? [],indexProduct: 0,)
+                          )
 
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.black)
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300]),
-                  child: const Text(" Crear cliente ",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Dorgan',
-                        fontSize: 20,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w800,
-                      ))),
+                      child: const Text(" Crear cliente ",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Dorgan',
+                            fontSize: 20,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w800,
+                          ))),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+
             Visibility(
               visible: canCreate,
               child: ElevatedButton(
@@ -205,7 +224,9 @@ class _PreHomeState extends State<PreHome> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300]),
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.black)
+                  ),
                   child: const Text("Crear notificación",
                       style: TextStyle(
                         color: Colors.black,
