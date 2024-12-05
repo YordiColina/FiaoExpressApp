@@ -85,6 +85,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
           children: [
             TextField(
               controller: _titleController,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+              ),
               decoration: InputDecoration(labelText: 'Título',
                 border: OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.black),
@@ -96,6 +102,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
             ),
             TextField(
               controller: _bodyController,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+              ),
               decoration: InputDecoration(labelText: 'Mensaje',
               border: OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.black),
@@ -139,14 +151,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           title: Text(client['nombre'], style: const TextStyle(
                             color: Colors.black,
                             fontFamily: 'Dorgan',
-                            fontSize: 20,
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 18,
                             fontStyle: FontStyle.italic,
                             fontWeight: FontWeight.w800,
                           ),),
                           subtitle: Text('cédula: ${client['id']}',style: const TextStyle(
                             color: Colors.black,
                             fontFamily: 'Dorgan',
-                            fontSize: 20,
+                            fontSize: 18,
                             fontStyle: FontStyle.italic,
                             fontWeight: FontWeight.w800,
                           ),),
