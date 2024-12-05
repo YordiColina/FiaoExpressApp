@@ -85,16 +85,38 @@ class _NotificationScreenState extends State<NotificationScreen> {
           children: [
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Título'),
+              decoration: InputDecoration(labelText: 'Título',
+                border: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black),
+                  borderRadius: BorderRadius.circular(20)
+                ) ),
+            ),
+            const SizedBox(
+              height: 20,
             ),
             TextField(
               controller: _bodyController,
-              decoration: const InputDecoration(labelText: 'Mensaje'),
+              decoration: InputDecoration(labelText: 'Mensaje',
+              border: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black),
+                borderRadius: BorderRadius.circular(20)
+            )
+              ),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  side: const BorderSide(color: Colors.black)
+              ),
               onPressed: _loadClients,
-              child: const Text('Cargar Clientes'),
+              child: const Text('Cargar Clientes', style: TextStyle(
+                color: Colors.black,
+                fontFamily: 'Dorgan',
+                fontSize: 20,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w800,
+              ),),
             ),
             _loading
                 ? const CircularProgressIndicator()
@@ -103,22 +125,60 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 itemCount: _clients.length,
                 itemBuilder: (context, index) {
                   final client = _clients[index];
-                  return ListTile(
-                    title: Text(client['nombre']),
-                    subtitle: Text('cédula: ${client['id']}'),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: () =>
-                          _sendNotificationToClient(client['fcm']),
-                    ),
+                  return Column(
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black),
+                          borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: ListTile(
+                          title: Text(client['nombre'], style: const TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Dorgan',
+                            fontSize: 20,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w800,
+                          ),),
+                          subtitle: Text('cédula: ${client['id']}',style: const TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Dorgan',
+                            fontSize: 20,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w800,
+                          ),),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.send),
+                            onPressed: () =>
+                                _sendNotificationToClient(client['fcm']),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
                   );
                 },
               ),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  side: const BorderSide(color: Colors.white)
+              ),
               onPressed: _sendNotificationToAll,
-              child: const Text('Enviar a Todos'),
+              child: const Text('Enviar a Todos', style:  TextStyle(
+                color: Colors.white,
+                fontFamily: 'Dorgan',
+                fontSize: 20,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w800,
+              ),),
             ),
           ],
         ),
