@@ -133,7 +133,9 @@ class _PreHomeState extends State<PreHome> {
               child: ElevatedButton(
                   onPressed: () async {
                     if(searchController.text.isNotEmpty) {
-                      FCMService().obtenerYActualizarToken(searchController.text);
+                      if(!canCreate) {
+                        FCMService().obtenerYActualizarToken(searchController.text);
+                      }
                       controllers.add(searchController);
                       homeBloc.add(SetValuesEvent(controllers,context));
                      twoProducts = await homeBloc.checkProduct(2, searchController);
