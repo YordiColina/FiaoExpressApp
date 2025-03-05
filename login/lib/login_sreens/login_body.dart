@@ -33,10 +33,24 @@ class _LoginBodyState extends State<LoginBody> {
       builder: (context, state) {
         return Column(
           children: [
+            Padding(
+              padding: EdgeInsets.only( right: MediaQuery.of(context).size.width * 0.38,),
+              child: const Text("Iniciar sesión",style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Dorgan',
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 25
+              ),),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+
             Visibility(
               visible: true,
               child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
+                padding: const EdgeInsets.only(left: 40, right: 40),
                 child: TextField(
                   controller: emailController,
                   style: const TextStyle(
@@ -56,7 +70,7 @@ class _LoginBodyState extends State<LoginBody> {
                       fontWeight: FontWeight.w400,
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                      borderRadius: BorderRadius.circular(10), // Esquinas redondeadas
                       borderSide: const BorderSide(
                         color: Colors.black, // Color del borde
                         width: 2.0, // Ancho del borde
@@ -70,7 +84,7 @@ class _LoginBodyState extends State<LoginBody> {
             Visibility(
               visible: true,
               child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
+                padding: const EdgeInsets.only(left: 40, right: 40),
                 child: TextField(
                   controller: passwordController,
                   style: const TextStyle(
@@ -103,7 +117,7 @@ class _LoginBodyState extends State<LoginBody> {
                       fontWeight: FontWeight.w400,
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+                      borderRadius: BorderRadius.circular(10), // Esquinas redondeadas
                       borderSide: const BorderSide(
                         color: Colors.white, // Color del borde
                         width: 2.0, // Ancho del borde
@@ -132,13 +146,13 @@ class _LoginBodyState extends State<LoginBody> {
                 },
                 child: Padding(
                   padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.38,
+                    right: MediaQuery.of(context).size.width * 0.38,
                     top: 10,
                   ),
                   child: const Text(
-                    "Olvidé mi contraseña",
+                    "¿Olvidaste tu contraseña?",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Color.fromRGBO(71, 145, 255, 10),
                       fontFamily: 'Dorgan',
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.w400,
@@ -162,10 +176,9 @@ class _LoginBodyState extends State<LoginBody> {
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
-                      side: const BorderSide(color: Colors.white,width: 2)
                   ),
                   child: const Text("Iniciar Sesión",style: TextStyle(
-                      color: Colors.white,
+                      color: Color.fromRGBO(243, 226, 57, 100),
                       fontFamily: 'Dorgan',
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.w800,
@@ -191,6 +204,8 @@ class _LoginBodyState extends State<LoginBody> {
                         value: bloc,  // Usa el mismo LoginBloc de LoginBody
                         child: DraggableScrollableSheet(
                           expand: false,
+                          minChildSize: 0.8,
+                          initialChildSize: 0.8,
                           builder: (context, scrollController) {
                             return const CreateAccount();
                           },
@@ -202,9 +217,8 @@ class _LoginBodyState extends State<LoginBody> {
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.black,width: 2)
                 ),
-                child: const Text("Crear Cuenta",style: TextStyle(
+                child: const Text("Regístrate",style: TextStyle(
                     color: Colors.black,
                     fontFamily: 'Dorgan',
                     fontStyle: FontStyle.italic,
@@ -214,9 +228,29 @@ class _LoginBodyState extends State<LoginBody> {
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: 30,
             ),
-
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("FIAO",style: TextStyle(
+                  color: Color.fromRGBO(14, 14, 11, 100),
+                  fontSize: 20,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Dorgan',
+                ),
+                ),
+                Text("EXPRESS",style: TextStyle(
+                  color: Color.fromRGBO(14, 14, 11, 100),
+                  fontSize: 20,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Dorgan',
+                ),
+                ),
+              ],
+            ),
           ],
         );
       },

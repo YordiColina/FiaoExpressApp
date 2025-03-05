@@ -14,7 +14,7 @@ class _LoginscreenState extends State<Loginscreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          color: Colors.white
+          color: Color.fromRGBO(243, 226, 57, 95),
         ),
         child: Center(
           child: SingleChildScrollView(
@@ -26,36 +26,15 @@ class _LoginscreenState extends State<Loginscreen> {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                         border: Border.all(color: Colors.white),
                          borderRadius: BorderRadius.circular(20)
                          ),
 
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.asset('packages/login/assets/images/newlogo.jpg',scale: 1.5,fit: BoxFit.cover))
+                              child: Image.asset('packages/login/assets/images/fiao.png',scale: 1.1,fit: BoxFit.cover))
 
                       ),
-                       const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("FIAO",style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 32,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w800,
-                            fontFamily: 'Dorgan',
-                          ),
-                          ),
-                          Text("EXPRESS",style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 32,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Dorgan',
-                          ),
-                          ),
-                        ],
-                      ),
+
                       const SizedBox(
                         height: 60
                       ),

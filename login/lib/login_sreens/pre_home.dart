@@ -27,25 +27,24 @@ class _PreHomeState extends State<PreHome> {
   int listSize = 0;
   List<TextEditingController> controllers = [];
   bool emptySearch = true;
+
   @override
   void initState() {
     getToken();
     _requestPermission();
 
-
-
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('Mensaje clickeado: ${message.notification?.title}');
       // Aquí puedes redirigir al usuario a otra pantalla
     });
-    if(searchController.text.isNotEmpty) {
+    if (searchController.text.isNotEmpty) {
       controllers.add(searchController);
       homeBloc.add(SetValuesEvent(controllers, context));
     }
 
     userEmail = bloc.getCurrentUserEmail();
     print(userEmail);
-    if(userEmail != "fiaoexpressapp@gmail.com") {
+    if (userEmail != "fiaoexpressapp@gmail.com") {
       canCreate = false;
     } else {
       canCreate = true;
@@ -56,322 +55,279 @@ class _PreHomeState extends State<PreHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider<HomeBloc>(
-            create: ((context) => homeBloc),
-          ),
-        ],
-        child:  BlocBuilder<HomeBloc, HomeState>(
-
-          builder: (context, state) {
-       return Padding(
-        padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.09,
-            right: MediaQuery.of(context).size.width * 0.09,
-            top: MediaQuery.of(context).size.height * 0.25),
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              child: const Text(
-              "Ingresa tu numero de Cédula",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 18,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextField(
-              controller: searchController,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                fontFamily: 'Dorgan',
-                fontStyle: FontStyle.italic,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                hintText: "Ingresa tu cédula",
-                hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'Dorgan',
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  // Esquinas redondeadas
-                  borderSide: const BorderSide(
-                    color: Colors.white, // Color del borde
-                    width: 2.0, // Ancho del borde
-                  ),
-                ),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  if(value.isNotEmpty && value != "") {
-                    emptySearch = false;
-                  } else {
-                    emptySearch = true;
-                  }
-                });
-              },
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Visibility(
-              visible: true,
-              child: ElevatedButton(
-                  onPressed: () async {
-                    if(searchController.text.isNotEmpty) {
-                      if(!canCreate) {
-                        FCMService().obtenerYActualizarToken(searchController.text);
-                      }
-                      controllers.add(searchController);
-                      homeBloc.add(SetValuesEvent(controllers,context));
-                     twoProducts = await homeBloc.checkProduct(2, searchController);
-                     threeProducts = await homeBloc.checkProduct(3, searchController);
-                     setState(() {
-                       if(state.status == true && !twoProducts && !threeProducts) {
-                         listSize = 1;
-                       } else if (twoProducts && !threeProducts) {
-                         listSize = 2;
-                         homeBloc.add(GetProductEvent(controllers, context, listSize));
-                         print("MANDAMOS EL 2");
-                       } else if(threeProducts) {
-                         listSize = 3;
-                         homeBloc.add(GetProductEvent(controllers, context, listSize-2));
-                         homeBloc.add(GetProductEvent(controllers, context, listSize-1));
-                         homeBloc.add(GetProductEvent(controllers, context, listSize));
-                       } else {
-                         listSize = 0;
-                       }
-                     });
-
-                     print("se encontro 2 productos $twoProducts y tres? $threeProducts");
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.black)),
-                  child: const Text(" Cargar ",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Dorgan',
-                        fontSize: 20,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w800,
-                      ))),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Visibility(
-              visible: canCreate && emptySearch,
-              child: Column(
-                children: [
-                  ElevatedButton(
-                      onPressed: () async {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => BlocProvider.value(
-                              value: homeBloc,
-                              child:  HomeAux(clientData: state.fieldsController ?? [],indexProduct: 0,)
-                          )
-
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.black)
-                      ),
-                      child: const Text(" Crear cliente ",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'Dorgan',
-                            fontSize: 20,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w800,
-                          ))),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
-              ),
-            ),
-
-            Visibility(
-              visible: canCreate,
-              child: ElevatedButton(
-                  onPressed: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => BlocProvider.value(
-                          value: homeBloc,
-                          child:  NotificationScreen()
-                      )
-
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.black)
-                  ),
-                  child: const Text("Crear notificación",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Dorgan',
-                        fontSize: 20,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w800,
-                      ))),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Visibility(
-              visible: state.status == true,
-              child: Expanded(
-                child: ListView(
-                  children: List.generate(
-                    listSize,
-                        (index) =>
-                       Column(
-                         children: [
-                           GestureDetector(
-                             onTap: () {
-                               Navigator.push(
-                                 context,
-                                 MaterialPageRoute(builder: (context) => BlocProvider.value(
-                                   value: homeBloc,
-                                     child: index == 0 ? HomeAux(clientData: state.fieldsController ?? [],indexProduct: index,) :
-                                         index == 1 ? HomeAux(clientData: state.productTwoData ?? [],indexProduct: index+1,) :
-                                         HomeAux(clientData: state.productThreeData ?? [],indexProduct: index+1,)
-                                 )
-
-                                 ),
-                               );
-                             },
-                               child: index == 0 ? productCard(state.fieldsController ?? []) :
-                               index  == 1 ? productCard(state.productTwoData ?? []) : productCard(state.productThreeData ?? [])
-
-
-                           ),
-                           const SizedBox(
-                             height: 20,
-                           ),
-                           Visibility(
-                             visible: index == listSize -1 && listSize != 0,
-                               child: GestureDetector(
-                                 onTap: () {
-                                   Navigator.push(
-                                     context,
-                                     MaterialPageRoute(builder: (context) => BlocProvider.value(
-                                         value: homeBloc,
-                                         child:  AddProduct(clientData: state.fieldsController ?? [] ,indexProduct: listSize == 1 ? 2 : 3,))),
-                                   );
-                                 },
-                                 child: Container(
-                                     height: 50,
-                                     width: 50,
-                                     decoration: BoxDecoration(
-                                       border: Border.all(color: Colors.black),
-                                       borderRadius: BorderRadius.circular(50)
-
-                                     ),
-                                     child: const Icon(Icons.add,size: 50,)),
-                               ))
-                         ],
-                       )
-                        ),
-                  ),
-                ),
-            ),
-          ],
+        body: MultiBlocProvider(
+      providers: [
+        BlocProvider<HomeBloc>(
+          create: ((context) => homeBloc),
         ),
-      );
-  },
-  ),
-
-  )
-    );
+      ],
+      child: BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) {
+          return Stack(
+            children: [
+              Container(
+                height: 170,
+                color: const Color.fromRGBO(243, 226, 57, 95),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, top: 40),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                  height: 20,
+                                  child: ClipRRect(
+                                      child: Image.asset(
+                                          'packages/login/assets/images/fiao.png',
+                                          scale: 5.5,
+                                          fit: BoxFit.cover))),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              const Text(
+                                "FIAO",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontStyle: FontStyle.italic,
+                                  fontWeight: FontWeight.w800,
+                                  fontFamily: 'Dorgan',
+                                ),
+                              ),
+                              const Text(
+                                "EXPRESS",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontStyle: FontStyle.italic,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Dorgan',
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: Row(
+                              children: [
+                                Icon(Icons.notifications),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Icon(Icons.access_alarm_outlined),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Icon(Icons.logout),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Hola,",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 22),
+                          ),
+                          Text(
+                            "Yordi!",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 22),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.17),
+                child: Container(
+                  height: double.infinity,
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      )),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, top: 30, right: 20),
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "Resumen",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Dorgan',
+                              fontSize: 20,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          child: productCard(controllers),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    ));
   }
 
-  Widget productCard (List<TextEditingController> controllers) {
+  Widget productCard(List<TextEditingController> controllers) {
     return Container(
-      height: 70,
+      height: 130,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.black)
-      ),
-      child: Column(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.black)),
+      child: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            padding: const EdgeInsets.only(left: 20),
+            child: Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: Colors.grey),
+                    color: const Color.fromRGBO(244, 244, 244, 100)),
+                child: SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: ClipRRect(
+                      child: Image.asset(
+                          'packages/login/assets/images/fiaoff.png',
+                          width: 50,
+                          height: 20,
+                          scale: 1,
+                          fit: BoxFit.none)),
+                )),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 25, left: 10),
+            child: Stack(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: Text(controllers.isNotEmpty ? controllers[3].text :"nombre",style:const TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Dorgan',
-                    fontSize: 14,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w800,
-                  ) ,),
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          controllers.isNotEmpty
+                              ? controllers[3].text
+                              : "Jaguar Tr150-",
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Dorgan',
+                            fontSize: 16,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+
+                        Text(
+                          controllers.isNotEmpty ? controllers[13].text : "Toro",
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Dorgan',
+                            fontSize: 16,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      controllers.isNotEmpty
+                          ? controllers[8].text
+                          : "PLAN PlANIFICADO",
+                      style: const TextStyle(
+                        color: Color.fromRGBO(136, 136, 136, 10),
+                        fontFamily: 'Dorgan',
+                        fontSize: 16,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: 150, // Ajusta el ancho según lo que necesites
+                      height: 25,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.grey[300], // Color de fondo
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: LinearProgressIndicator(
+                              value: 20 / 50, // Progreso dinámico (20 cuotas de 50)
+                              minHeight: 25,
+                              backgroundColor: Colors.grey[300],
+                              valueColor: const AlwaysStoppedAnimation<Color>(Color.fromRGBO(243, 226, 57, 95)),
+                            ),
+                          ),
+                          const Text(
+                            "Cuotas: 20/50",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromRGBO(136, 136, 136, 10), // Contraste con la barra
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
+
                 Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: Text(controllers.isNotEmpty ? controllers[13].text :"Moto",style:const TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Dorgan',
-                    fontSize: 14,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w800,
-                  ) ,),
+                  padding: const EdgeInsets.only(top: 20,left: 150),
+                  child: Container(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(onPressed: () {
+
+                    }, icon: const Icon(Icons.arrow_forward_ios)),
+                  ),
                 )
               ],
             ),
           ),
           const SizedBox(
             height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: Text(controllers.isNotEmpty ? controllers[8].text : "plan",style:const TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 14,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ) ,),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 20),
-                child: Text(controllers.isNotEmpty ? controllers[12].text : "modelo",style:const TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Dorgan',
-                  fontSize: 14,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w800,
-                ) ,),
-              )
-            ],
           ),
         ],
       ),
