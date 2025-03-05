@@ -162,8 +162,8 @@ class _PreHomeState extends State<PreHome> {
                   decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
+                        topLeft: Radius.circular(50),
+                        topRight: Radius.circular(50),
                       )),
                   child: Padding(
                     padding:
