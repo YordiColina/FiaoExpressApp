@@ -67,7 +67,7 @@ class _PreHomeState extends State<PreHome> {
             children: [
               Container(
                 height: 170,
-                color: const Color.fromRGBO(243, 226, 57, 95),
+                color: const Color.fromRGBO(243, 226, 57, 65),
                 child: Column(
                   children: [
                     Padding(
@@ -129,25 +129,28 @@ class _PreHomeState extends State<PreHome> {
                         ],
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 30),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             "Hola,",
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 22),
                           ),
-                          Text(
+                          const Text(
                             "Yordi!",
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 22),
                           ),
+                          IconButton(onPressed: (){
+
+                          }, icon: const Icon(Icons.arrow_forward_ios,size: 15,color: Colors.black,) )
                         ],
                       ),
                     )
@@ -167,7 +170,7 @@ class _PreHomeState extends State<PreHome> {
                       )),
                   child: Padding(
                     padding:
-                        const EdgeInsets.only(left: 20, top: 30, right: 20),
+                        const EdgeInsets.only(left: 20, top: 60, right: 20),
                     child: Column(
                       children: [
                         Container(
@@ -188,6 +191,17 @@ class _PreHomeState extends State<PreHome> {
                         ),
                         Container(
                           child: productCard(controllers),
+                        ),
+                        
+                        Padding(
+                          padding: const EdgeInsets.only(top: 250),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(onPressed: () {}, icon: const Icon(Icons.category,size: 50,)),
+                              IconButton(onPressed: () {}, icon: const Icon(Icons.person,size: 50,))
+                            ],
+                          ),
                         )
                       ],
                     ),
