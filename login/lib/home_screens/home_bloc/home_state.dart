@@ -10,6 +10,7 @@ class HomeState extends Equatable {
   final FiaoExpressStatus? fiaoEstatus;
   final MotorcycleDeliveryData? datosEntregaMoto;
   final List<TextEditingController>? fieldsController;
+  final List<TextEditingController>? userDataController;
   final List<TextEditingController>? productTwoData;
   final List<TextEditingController>? productThreeData;
   final bool? status ;
@@ -24,6 +25,7 @@ class HomeState extends Equatable {
     this.fiaoEstatus,
     this.datosEntregaMoto,
     this.fieldsController,
+    this.userDataController,
     this.productTwoData,
     this.productThreeData,
     this.status
@@ -38,6 +40,7 @@ class HomeState extends Equatable {
     FiaoExpressStatus? fiaoEstatus,
     MotorcycleDeliveryData? datosEntregaMoto,
     List<TextEditingController>? fieldsController,
+    List<TextEditingController>? userDataController,
     List<TextEditingController>? productTwoData,
     List<TextEditingController>? productThreeData,
     bool? status
@@ -51,6 +54,7 @@ class HomeState extends Equatable {
         fiaoEstatus: fiaoEstatus ?? this.fiaoEstatus,
         datosEntregaMoto: datosEntregaMoto ?? this.datosEntregaMoto,
         fieldsController: fieldsController ?? this.fieldsController,
+        userDataController: userDataController ?? this.userDataController,
         productTwoData: productTwoData ?? this.productTwoData,
         productThreeData: productThreeData ?? this.productThreeData,
         status: status ?? this.status
@@ -58,7 +62,7 @@ class HomeState extends Equatable {
   }
   @override
   List<Object?> get props => [datosContrato,datosCliente,grupoInscrito,pagoMoroso,pagosRealizados,
-    fiaoEstatus,datosEntregaMoto,fieldsController,productTwoData,productThreeData,status];
+    fiaoEstatus,datosEntregaMoto,fieldsController,userDataController,productTwoData,productThreeData,status];
 
 
   Map<String, dynamic> toMap() {

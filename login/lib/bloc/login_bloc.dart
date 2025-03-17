@@ -1,4 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:login/home_screens/home_aux.dart';
 import 'package:login/login_sreens/pre_home.dart';
 
+import '../data/models/user.dart';
 import '../home_screens/home_screen.dart';
 
 part 'login_event.dart';
@@ -19,6 +21,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<CreateAccountEvent>(_registerUser);
   }
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final CollectionReference _usuarios =
+  FirebaseFirestore.instance.collection('usuarios');
 
   Future<void> _login(
   LoginButtonPressed event,
@@ -36,7 +40,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       ocultarLoading(event.context);
       if(state.status == true) {
         Navigator.of(event.context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const PreHome()));
+            MaterialPageRoute(builder: (context) => PreHome(email: state.email ?? event.email)));
       }
       // Si la autenticación es exitosa, navega a la pantalla principal
      mostrarFlushbar(event.context, "Inicio de sesión exitoso", false);
@@ -51,17 +55,28 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future<void> _registerUser(CreateAccountEvent event ,
       Emitter<LoginState> emit) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: event.email,
-        password: event.password,
-      );
-      Navigator.pushReplacementNamed(event.context, '/login');
+      if (event.nombre != "" && event.password == event.repeatPassword) {
+      final newState = state.copyWith(user: UserData(
+            nombre: event.nombre, cedula: event.cedula, correo: event.email));
+      emit(newState);
+        await _usuarios
+            .doc(state.user?.correo)
+            .set(state.toMap(), SetOptions(merge: true));
 
-      mostrarFlushbar(event.context, "Cuenta creada exitosamente", false);
-    } catch (e) {
+
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: event.email,
+          password: event.password,
+        );
+        Navigator.pushReplacementNamed(event.context, '/login');
+
+        mostrarFlushbar(event.context, "Cuenta creada exitosamente", false);
+      }
+      } catch (e) {
       // Muestra un mensaje de error
       mostrarFlushbar(event.context, "Error al crear cuenta", true);
     }
+
   }
 
 

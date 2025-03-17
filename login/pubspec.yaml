@@ -37,6 +37,9 @@ flutter:
    assets:
      - assets/images/newlogo.jpg
      - assets/images/fiao.png
+     -  assets/images/social.png
+     - assets/images/person.png
+     - assets/images/products.png
      - assets/images/fiaoff.png
      - assets/credentials/fiaoexpressapp-a166b-firebase-adminsdk-58x2q-01704231e5.json
   #   - images/a_dot_ham.jpeg

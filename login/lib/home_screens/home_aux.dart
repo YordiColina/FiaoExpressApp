@@ -62,7 +62,7 @@ class _HomeAuxState extends State<HomeAux> {
     "Observación"
   ];
   final List<String> sectionTitles = [
-    "Datos del contrato",
+    "Información del contrato",
     "Datos del cliente",
     "Grupo inscrito",
     "Pagos realizados",
@@ -257,9 +257,14 @@ class _HomeAuxState extends State<HomeAux> {
             index  == 24,
             child: Padding(
               padding: EdgeInsets.only(
-                  right: MediaQuery.of(context).size.width * 0.40),
-              child: Text(
-                index == 0 ? sectionTitles[0]: index == 3 ? sectionTitles[1] : index == 8 ? sectionTitles[2]
+                  right:  MediaQuery.of(context).size.width * 0.40 ),
+              child: index == 0 ? Container(alignment: Alignment.center,child: Text(sectionTitles[0],style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'Dorgan',
+                fontStyle: FontStyle.italic,
+              ),maxLines: 2,),) : Text(
+                index == 3 ? sectionTitles[1] : index == 8 ? sectionTitles[2]
                     : index == 16 ? sectionTitles[3] : index == 21 ? sectionTitles[4] :
                 index == 23 ? sectionTitles[5] : index == 24 ? sectionTitles[6] :"",
                 style: const TextStyle(

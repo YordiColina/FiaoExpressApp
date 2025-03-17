@@ -38,3 +38,12 @@ class GetProductEvent extends HomeEvent {
  @override
  List<Object> get props => [controllers,index];
 }
+
+class GetUserDataEvent extends HomeEvent {
+ final String email;
+
+ const GetUserDataEvent(super.controllers, super.context, this.email);
+
+ @override
+ List<Object> get props => [controllers,email];
+}

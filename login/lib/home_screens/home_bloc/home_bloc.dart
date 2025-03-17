@@ -24,6 +24,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<SetValuesEvent>(_getUser);
     on<DeleteClientEvent>(_deleteClient);
     on<GetProductEvent>(_getDataProduct);
+    on<GetUserDataEvent>(_getUserData);
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -136,7 +137,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       SetValuesEvent event,
       Emitter<HomeState> emit,
       ) async {
-    print("si disparo el evento");
+    print("si disparo el evento para obtener los productos del usuario");
     try {
       CollectionReference clientes =
       FirebaseFirestore.instance.collection('clientes');
@@ -144,6 +145,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           .where('datosCliente.cédula', isEqualTo: event.controllers[0].text)
           .get();
       if (event.controllers[0].text != "") {
+        print("entro a la lista de los controllers");
+        print("funcionoooo ${event.controllers[0].text}");
         List<TextEditingController> dataController = [];
         for (QueryDocumentSnapshot doc in querySnapshot.docs) {
           // Obtiene los datos del documento completo
@@ -200,11 +203,44 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           dataController[27].text = bikeDeliveryData['serialCarroceria'];
           dataController[28].text = bikeDeliveryData['placa'];
           dataController[29].text = bikeDeliveryData['observacion'];
+          print( selectedGroup['plan']);
         }
+
         emit(state.copyWith(fieldsController: dataController,
         status: true));
       }
     } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _getUserData(
+      GetUserDataEvent event,
+      Emitter<HomeState> emit,
+      ) async {
+    print("si disparo el evento de los datos del usuario");
+    try {
+      CollectionReference usuarios =
+      FirebaseFirestore.instance.collection('usuarios');
+      QuerySnapshot querySnapshot = await usuarios
+          .where('datosCliente.correo', isEqualTo: event.email)
+          .get();
+      List<TextEditingController> dataController = [];
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        // Obtiene los datos del documento completo
+        Map<String, dynamic> datos = doc.data() as Map<String, dynamic>;
+        for(int i = 0; i < 3; i++) {
+          dataController.add(TextEditingController());
+        }
+        // Extrae los datos del contrato
+        Map<String, dynamic> clientData = datos['datosCliente'];
+        dataController[0].text = clientData['nombre'];
+        dataController[1].text = clientData['cédula'];
+        dataController[2].text = clientData['correo'];
+      }
+      emit(state.copyWith(userDataController: dataController,
+          status: true));
+        } catch (e) {
       print(e);
     }
   }
@@ -239,7 +275,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<void> _getDataProduct(GetProductEvent event,
       Emitter<HomeState> emit,) async {
-    print("si disparo el evento");
+    print("si disparo el evento de los pproductos del usuario");
     try {
       CollectionReference clientes =
       FirebaseFirestore.instance.collection('clientes');
@@ -320,8 +356,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
 
 
-  String getCurrentUserEmail() {
-    return _auth.currentUser?.email ?? "";
+  Future<String> getCurrentId(String correo) async {
+    String id = "";
+    CollectionReference usuarios =
+   await FirebaseFirestore.instance.collection('usuarios');
+    QuerySnapshot querySnapshot = await usuarios
+        .where('datosCliente.correo', isEqualTo: correo)
+        .get();
+    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+      // Obtiene los datos del documento completo
+      Map<String, dynamic> datos = doc.data() as Map<String, dynamic>;
+      Map<String, dynamic> clientData = datos['datosCliente'];
+      id =  clientData['cédula'];
+    } print(id);
+    return id;
   }
 
   void mostrarFlushbar(BuildContext context, String message, bool fail) {

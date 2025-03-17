@@ -14,7 +14,7 @@ class _LoginscreenState extends State<Loginscreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          color: Color.fromRGBO(243, 226, 57, 95),
+          color: Color.fromRGBO(243, 226, 57, 1),
         ),
         child: Center(
           child: SingleChildScrollView(

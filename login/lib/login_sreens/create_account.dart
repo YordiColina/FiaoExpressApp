@@ -224,7 +224,8 @@ class _CreateAccountState extends State<CreateAccount> {
                               context.read<LoginBloc>().add(CreateAccountEvent(
                                   _emailController.text.trim(),
                                   _passwordController.text.trim(),
-                                  context));
+                                  context,_nameController.text.trim(),
+                                  _idController.text.trim(),_repeatPasswordController.text.trim()));
                               _emailController.text = "";
                               _passwordController.text = "";
                             }
