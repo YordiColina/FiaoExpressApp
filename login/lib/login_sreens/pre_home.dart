@@ -7,6 +7,7 @@ import '../data/service/FCM_service.dart';
 import '../home_screens/categories_screen.dart';
 import '../home_screens/home_aux.dart';
 import '../home_screens/home_bloc/home_bloc.dart';
+import '../home_screens/sign_out_screen.dart';
 
 class PreHome extends StatefulWidget {
   final String email;
@@ -139,7 +140,9 @@ class _PreHomeState extends State<PreHome> {
                                   width: 5,
                                 ),
                                 IconButton(onPressed: () {
-                                  homeBloc.signOut(context);
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => const SignOutScreen()));
+
                                 }, icon: const Icon(Icons.logout))
                               ],
                             ),
