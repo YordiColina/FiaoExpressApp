@@ -30,8 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  login:
-    path: ./login
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -41,6 +40,13 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   http: ^1.2.2
   googleapis_auth: ^1.6.0
+  firebase_auth: ^5.3.1
+  flutter_bloc: ^8.1.6
+  cloud_firestore: ^5.4.4
+  equatable: ^2.0.5
+  another_flushbar: ^1.12.30
+  firedart: ^0.9.8
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +77,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
      - assets/credentials/fiaoexpressapp-a166b-firebase-adminsdk-58x2q-01704231e5.json
+     - assets/images/newlogo.jpg
+     - assets/images/fiao.png
+     - assets/images/social.png
+     - assets/images/person.png
+     - assets/images/products.png
+     - assets/images/fiaoff.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -83,11 +96,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+  fonts:
+    - family: Dorgan
+      fonts:
+        - asset: assets/fonts/Dorgan.ttf
+        - asset: assets/fonts/WHOAA.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:
