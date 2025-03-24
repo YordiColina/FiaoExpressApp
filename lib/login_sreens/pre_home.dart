@@ -174,37 +174,34 @@ class _PreHomeState extends State<PreHome> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: state.userDataController != null ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Hola,",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 22),
-                          ),
-                           Text(
-                           state.userDataController?[0].text.split(" ").first ?? "usuario!",
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 22),
-                          ),
-                          IconButton(onPressed: (){
+                    state.userDataController != null ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Hola,",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 26),
+                        ),
+                         Text(
+                         "${state.userDataController?[0].text.split(" ").first}!" ?? "usuario!",
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 26),
+                        ),
+                        IconButton(onPressed: (){
 
-                          }, icon: const Icon(Icons.arrow_forward_ios,size: 15,color: Colors.black,) )
-                        ],
-                      ): const CircularProgressIndicator()
-                    )
+                        }, icon: const Icon(Icons.arrow_forward_ios,size: 15,color: Colors.black,) )
+                      ],
+                    ): const CircularProgressIndicator()
                   ],
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.17),
+                    top: MediaQuery.of(context).size.height * 0.19),
                 child: Container(
                   height: double.infinity,
                   decoration: const BoxDecoration(
@@ -215,121 +212,125 @@ class _PreHomeState extends State<PreHome> {
                       )),
                   child: Padding(
                     padding:
-                        const EdgeInsets.only(left: 20, top: 30, right: 20),
+                        const EdgeInsets.only(left: 20, top: 25, right: 20),
                     child: Column(
                       children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: const Text(
-                            "Resumen",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.w800,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10,top: 60),
+                          child: Container(
+                            alignment: Alignment.bottomLeft,
+                            child: const Text(
+                              "Resumen",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 24,
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w800,
+                              ),
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
                         Expanded(
-                          child: ListView(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 15, right: 15),
+                            child: ListView(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => BlocProvider.value(
+                                        value: homeBloc,
+                                        child:HomeAux(clientData: state.fieldsController ?? [],indexProduct: 0,))));
+                                  },
+                                  child: Container(
+                                    child: state.fieldsController != null? productCard(state.fieldsController ?? []): Container()
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+
+                                Visibility(
+                                  visible: twoProducts,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => BlocProvider.value(
+                                          value: homeBloc,
+                                          child:  HomeAux(clientData: state.productTwoData ?? [],indexProduct: 2))));
+                                    },
+                                    child: Container(
+                                        child: state.fieldsController != null? productCard(state.productTwoData ?? []): Container()
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Visibility(
+                                  visible: threeProducts,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => BlocProvider.value(
+                                          value: homeBloc,
+                                          child:  HomeAux(clientData: state.productThreeData ?? [],indexProduct: 3,))));
+                                    },
+                                    child: Container(
+                                        child: state.fieldsController != null? productCard(state.productThreeData ?? []): Container()
+                                    ),
+                                  ),
+                                ),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => BlocProvider.value(
-                                      value: homeBloc,
-                                      child:HomeAux(clientData: state.fieldsController ?? [],indexProduct: 0,))));
-                                },
-                                child: Container(
-                                  child: state.fieldsController != null? productCard(state.fieldsController ?? []): Container()
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-
-                              Visibility(
-                                visible: twoProducts,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => BlocProvider.value(
-                                        value: homeBloc,
-                                        child:  HomeAux(clientData: state.productTwoData ?? [],indexProduct: 2))));
-                                  },
-                                  child: Container(
-                                      child: state.fieldsController != null? productCard(state.productTwoData ?? []): Container()
+                              IconButton(onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => const CategoriesScreen()));
+                              }, icon:  Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20)
                                   ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Visibility(
-                                visible: threeProducts,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => BlocProvider.value(
-                                        value: homeBloc,
-                                        child:  HomeAux(clientData: state.productThreeData ?? [],indexProduct: 3,))));
-                                  },
-                                  child: Container(
-                                      child: state.fieldsController != null? productCard(state.productThreeData ?? []): Container()
+
+                                  child: ClipRRect(
+                                      child: Image.asset('packages/login/assets/images/products.png',scale: 1.1,fit: BoxFit.contain))
+
+                              ),),
+                              IconButton(onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => ProfileScreen(
+                                      nombre: state.userDataController?[0].text ?? "usuario!",
+                                      cedula: userId ?? "1234",
+                                      correo: widget.email,
+                                      direccion: state.fieldsController?[7].text ?? "",
+                                      telefono: state.fieldsController?[5].text ?? "",
+                                    )));
+                              }, icon:  Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20)
                                   ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    IconButton(onPressed: () {
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) => const CategoriesScreen()));
-                                    }, icon:  Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(20)
-                                        ),
 
-                                        child: ClipRRect(
-                                            child: Image.asset('packages/login/assets/images/products.png',scale: 1.1,fit: BoxFit.contain))
+                                  child: ClipRRect(
 
-                                    ),),
-                                    IconButton(onPressed: () {
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) => ProfileScreen(
-                                            nombre: state.userDataController?[0].text ?? "usuario!",
-                                            cedula: userId ?? "1234",
-                                            correo: widget.email,
-                                            direccion: state.fieldsController?[7].text ?? "",
-                                            telefono: state.fieldsController?[5].text ?? "",
-                                          )));
-                                    }, icon:  Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(20)
-                                        ),
+                                      child: Image.asset('packages/login/assets/images/person.png',scale: 1.1,fit: BoxFit.cover))
 
-                                        child: ClipRRect(
-
-                                            child: Image.asset('packages/login/assets/images/person.png',scale: 1.1,fit: BoxFit.cover))
-
-                                    ),)
-                                  ],
-                                ),
-                              )
+                              ),)
                             ],
                           ),
                         ),
-
-                        
-
+                        SizedBox(
+                          height: 30,
+                        )
                       ],
                     ),
                   ),
@@ -363,24 +364,29 @@ class _PreHomeState extends State<PreHome> {
                         color: Colors.grey),
                     color: const Color.fromRGBO(244, 244, 244, 100)),
                 child: SizedBox(
-                  height: 50,
-                  width: 50,
+                  height: 40,
+                  width: 40,
                   child: ClipRRect(
                       child: Image.asset(
                           'packages/login/assets/images/fiaoff.png',
                           width: 50,
                           height: 20,
-                          scale: 1,
-                          fit: BoxFit.none)),
+                          scale: 1.2,
+                          fit: BoxFit.scaleDown)),
                 )),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 25, left: 10),
             child: Stack(
               children: [
-                Column(
-                  children: [
-                    Row(
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 35),
+                    child: Row(
                       children: [
                         Text(
                           controllers.isNotEmpty
@@ -392,6 +398,7 @@ class _PreHomeState extends State<PreHome> {
                             fontStyle: FontStyle.italic,
                             fontWeight: FontWeight.w800,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
 
                         Text(
@@ -403,66 +410,83 @@ class _PreHomeState extends State<PreHome> {
                             fontStyle: FontStyle.italic,
                             fontWeight: FontWeight.w800,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      controllers.isNotEmpty
-                          ? "PLAN ${controllers[8].text.toUpperCase()}"
-                          : "PLAN PlANIFICADO",
-                      style: const TextStyle(
-                        color: Color.fromRGBO(136, 136, 136, 10),
-                        fontSize: 16,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, top: 30),
+                  child: Row(
+                    children: [
                     Container(
-                      width: 150, // Ajusta el ancho según lo que necesites
-                      height: 25,
+                      height: 5,
+                      width: 5,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.grey[300], // Color de fondo
-                      ),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: LinearProgressIndicator(
-                              value: controllers.isNotEmpty ?
-                              int.parse(controllers[18].text) / int.parse(controllers[15].text): 20/50,// Progreso dinámico (20 cuotas de 50)
-                              minHeight: 25,
-                              backgroundColor: Colors.grey[300],
-                              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFF3E239),),
-                            ),
-                          ),
-                         Text(
-                          controllers.isNotEmpty ?  "Cuotas: ${controllers[18].text}/${controllers[15].text}": "20/50",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromRGBO(136, 136, 136, 10), // Contraste con la barra
-                            ),
-                          ),
-                        ],
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.grey,
                       ),
                     ),
-                  ],
+                      Text(
+                        controllers.isNotEmpty
+                            ? " PLAN ${controllers[8].text.toUpperCase()}"
+                            : "PLAN PlANIFICADO",
+                        style: const TextStyle(
+                          color: Color.fromRGBO(136, 136, 136, 10),
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w800,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 60,left: 7),
+                  child: Container(
+                    width: 150, // Ajusta el ancho según lo que necesites
+                    height: 25,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey[300], // Color de fondo
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: LinearProgressIndicator(
+                            value: controllers.isNotEmpty ?
+                            int.parse(controllers[18].text) / int.parse(controllers[15].text): 20/50,// Progreso dinámico (20 cuotas de 50)
+                            minHeight: 25,
+                            backgroundColor: Colors.grey[300],
+                            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFF3E239),),
+                          ),
+                        ),
+                       Text(
+                        controllers.isNotEmpty ?  "Cuotas: ${controllers[18].text}/${controllers[15].text}": "20/50",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(136, 136, 136, 10), // Contraste con la barra
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(top: 20,left: 150),
+                  padding: const EdgeInsets.only(top: 18,left: 141),
                   child: Container(
                     alignment: Alignment.topLeft,
                     child: IconButton(onPressed: () {
 
-                    }, icon: const Icon(Icons.arrow_forward_ios)),
+                    }, icon: const Icon(Icons.arrow_forward_ios), color: Colors.black,),
                   ),
                 )
               ],
@@ -479,7 +503,6 @@ class _PreHomeState extends State<PreHome> {
       userId = await  homeBloc.getCurrentId(widget.email);
       print(userId);
       if (userId != "") {
-        print("si pasoooooopo");
         searchController.text = userId;
         controllers.add(searchController);
         homeBloc.add(SetValuesEvent(controllers, context));
