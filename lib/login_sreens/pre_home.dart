@@ -187,7 +187,7 @@ class _PreHomeState extends State<PreHome> {
                                 fontSize: 22),
                           ),
                            Text(
-                           state.userDataController?[0].text ?? "usuario!",
+                           state.userDataController?[0].text.split(" ").first ?? "usuario!",
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w800,
@@ -208,14 +208,14 @@ class _PreHomeState extends State<PreHome> {
                 child: Container(
                   height: double.infinity,
                   decoration: const BoxDecoration(
-                      color: Colors.white,
+                      color: const Color(0xFFEBEBEB),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(50),
                         topRight: Radius.circular(50),
                       )),
                   child: Padding(
                     padding:
-                        const EdgeInsets.only(left: 20, top: 60, right: 20),
+                        const EdgeInsets.only(left: 20, top: 30, right: 20),
                     child: Column(
                       children: [
                         Container(
@@ -347,6 +347,7 @@ class _PreHomeState extends State<PreHome> {
     return Container(
       height: 130,
       decoration: BoxDecoration(
+        color: Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.black)),
       child: Row(

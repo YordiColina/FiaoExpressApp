@@ -58,7 +58,6 @@ class _CreateAccountState extends State<CreateAccount> {
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
-                            fontFamily: 'Dorgan',
                             fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -75,7 +74,6 @@ class _CreateAccountState extends State<CreateAccount> {
                           hintStyle: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
-                            fontFamily: 'Dorgan',
                             fontStyle: FontStyle.italic,
                           ),
                           border: OutlineInputBorder(
@@ -106,7 +104,6 @@ class _CreateAccountState extends State<CreateAccount> {
                           hintStyle: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
-                            fontFamily: 'Dorgan',
                             fontStyle: FontStyle.italic,
                           ),
                           border: OutlineInputBorder(
@@ -137,7 +134,6 @@ class _CreateAccountState extends State<CreateAccount> {
                           hintStyle: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
-                            fontFamily: 'Dorgan',
                             fontStyle: FontStyle.italic,
                           ),
                           border: OutlineInputBorder(
@@ -167,7 +163,6 @@ class _CreateAccountState extends State<CreateAccount> {
                           hintStyle: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
-                            fontFamily: 'Dorgan',
                             fontStyle: FontStyle.italic,
                           ),
                           border: OutlineInputBorder(
@@ -195,7 +190,6 @@ class _CreateAccountState extends State<CreateAccount> {
                             hintStyle: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
-                              fontFamily: 'Dorgan',
                               fontStyle: FontStyle.italic,
                             ),
                             border: OutlineInputBorder(
@@ -239,7 +233,6 @@ class _CreateAccountState extends State<CreateAccount> {
                           child: const Text('Registrarme',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontFamily: 'Dorgan',
                                 fontSize: 16,
                                 fontStyle: FontStyle.normal,
                                 fontWeight: FontWeight.w700,
@@ -261,7 +254,6 @@ class _CreateAccountState extends State<CreateAccount> {
                           child: const Text('Iniciar sesión',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontFamily: 'Dorgan',
                                 fontSize: 16,
                                 fontStyle: FontStyle.normal,
                                 fontWeight: FontWeight.w700,
