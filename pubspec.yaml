@@ -83,6 +83,7 @@ flutter:
      - assets/images/person.png
      - assets/images/products.png
      - assets/images/fiaoff.png
+     - assets/images/fiaologo.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

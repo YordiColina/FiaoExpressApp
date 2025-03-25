@@ -78,7 +78,7 @@ class _PreHomeState extends State<PreHome> {
           return Stack(
             children: [
               Container(
-                height: 170,
+                height: 220,
                 color: const Color(0xFFF3E239),
                 child: Column(
                   children: [
@@ -91,33 +91,16 @@ class _PreHomeState extends State<PreHome> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               SizedBox(
-                                  height: 20,
+                                  height: 33,
                                   child: ClipRRect(
                                       child: Image.asset(
-                                          'packages/login/assets/images/fiao.png',
-                                          scale: 5.5,
+                                          'assets/images/fiaologo.png',
+                                          scale: 1.1,
                                           fit: BoxFit.cover))),
                               const SizedBox(
                                 width: 5,
                               ),
-                              const Text(
-                                "FIAO",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontStyle: FontStyle.italic,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                              const Text(
-                                "EXPRESS",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontStyle: FontStyle.italic,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
+
                             ],
                           ),
                            Padding(
@@ -174,34 +157,37 @@ class _PreHomeState extends State<PreHome> {
                         ],
                       ),
                     ),
-                    state.userDataController != null ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Hola,",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 26),
-                        ),
-                         Text(
-                         "${state.userDataController?[0].text.split(" ").first}!" ?? "usuario!",
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 26),
-                        ),
-                        IconButton(onPressed: (){
+                    state.userDataController != null ? Padding(
+                      padding: const EdgeInsets.only(left: 30,top: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Hola,",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 35),
+                          ),
+                           Text(
+                           "${state.userDataController?[0].text.split(" ").first}!" ?? "usuario!",
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 35),
+                          ),
+                          IconButton(onPressed: (){
 
-                        }, icon: const Icon(Icons.arrow_forward_ios,size: 15,color: Colors.black,) )
-                      ],
+                          }, icon: const Icon(Icons.arrow_forward_ios,size: 15,color: Colors.black,) )
+                        ],
+                      ),
                     ): const CircularProgressIndicator()
                   ],
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.19),
+                    top: MediaQuery.of(context).size.height * 0.23),
                 child: Container(
                   height: double.infinity,
                   decoration: const BoxDecoration(
@@ -223,7 +209,7 @@ class _PreHomeState extends State<PreHome> {
                               "Resumen",
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 24,
+                                fontSize: 26,
                                 fontStyle: FontStyle.normal,
                                 fontWeight: FontWeight.w800,
                               ),
@@ -232,7 +218,7 @@ class _PreHomeState extends State<PreHome> {
                         ),
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 15, right: 15),
+                            padding: const EdgeInsets.only(left: 15, right: 10),
                             child: ListView(
                               children: [
                                 GestureDetector(
@@ -346,37 +332,34 @@ class _PreHomeState extends State<PreHome> {
   Widget productCard(List<TextEditingController> controllers) {
     print(controllers.length);
     return Container(
-      height: 130,
+      height: 100,
       decoration: BoxDecoration(
         color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.black)),
+          border: Border.all(color: Colors.grey)),
       child: Row(
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 20),
             child: Container(
-                height: 100,
-                width: 100,
+                height: 80,
+                width: 80,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: Colors.grey),
-                    color: const Color.fromRGBO(244, 244, 244, 100)),
-                child: SizedBox(
-                  height: 40,
-                  width: 40,
-                  child: ClipRRect(
-                      child: Image.asset(
-                          'packages/login/assets/images/fiaoff.png',
-                          width: 50,
-                          height: 20,
-                          scale: 1.2,
-                          fit: BoxFit.scaleDown)),
-                )),
+                        color: Colors.grey,
+                      width: 0.2
+                    ),
+                    color: Color(0xFFF4F4F4)),
+                child: Image.asset(
+                    'packages/login/assets/images/fiaoff.png',
+                    width: 50,
+                    height: 20,
+                    scale: 1.2,
+                    fit: BoxFit.scaleDown)),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 25, left: 10),
+            padding: const EdgeInsets.only(top: 12, left: 10),
             child: Stack(
               children: [
                 const SizedBox(
@@ -394,7 +377,7 @@ class _PreHomeState extends State<PreHome> {
                               : "Jaguar Tr150-",
                           style: const TextStyle(
                             color: Colors.black,
-                            fontSize: 16,
+                            fontSize: 18,
                             fontStyle: FontStyle.italic,
                             fontWeight: FontWeight.w800,
                           ),
@@ -406,7 +389,7 @@ class _PreHomeState extends State<PreHome> {
                         controllers[13].text : "moto" ,
                           style: const TextStyle(
                             color: Colors.black,
-                            fontSize: 16,
+                            fontSize: 18,
                             fontStyle: FontStyle.italic,
                             fontWeight: FontWeight.w800,
                           ),
@@ -417,7 +400,7 @@ class _PreHomeState extends State<PreHome> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 30),
+                  padding: const EdgeInsets.only(left: 10, top: 23),
                   child: Row(
                     children: [
                     Container(
@@ -434,8 +417,8 @@ class _PreHomeState extends State<PreHome> {
                             : "PLAN PlANIFICADO",
                         style: const TextStyle(
                           color: Color.fromRGBO(136, 136, 136, 10),
-                          fontSize: 15,
-                          fontStyle: FontStyle.italic,
+                          fontSize: 12,
+                          fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w800,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -447,7 +430,7 @@ class _PreHomeState extends State<PreHome> {
                   height: 10,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 60,left: 7),
+                  padding: const EdgeInsets.only(top: 50,left: 7),
                   child: Container(
                     width: 150, // Ajusta el ancho según lo que necesites
                     height: 25,
@@ -469,9 +452,10 @@ class _PreHomeState extends State<PreHome> {
                           ),
                         ),
                        Text(
-                        controllers.isNotEmpty ?  "Cuotas: ${controllers[18].text}/${controllers[15].text}": "20/50",
+                        controllers.isNotEmpty ?  "CUOTAS: ${controllers[18].text}/${controllers[15].text}": "20/50",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
+                            fontSize: 12,
                             color: Color.fromRGBO(136, 136, 136, 10), // Contraste con la barra
                           ),
                         ),
@@ -481,12 +465,12 @@ class _PreHomeState extends State<PreHome> {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(top: 18,left: 141),
+                  padding: const EdgeInsets.only(top: 10,left: 150),
                   child: Container(
                     alignment: Alignment.topLeft,
                     child: IconButton(onPressed: () {
 
-                    }, icon: const Icon(Icons.arrow_forward_ios), color: Colors.black,),
+                    }, icon: const Icon(Icons.arrow_forward_ios,size: 20,), color: Colors.black,),
                   ),
                 )
               ],
