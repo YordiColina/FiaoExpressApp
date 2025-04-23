@@ -72,14 +72,16 @@ class _PreHomeState extends State<PreHome> {
       ],
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-        if(aux < 3) {
-          getproductslenght(state.status ?? false);
-        }
+
+            if (aux < 3) {
+              getproductslenght(state.status ?? false);
+            }
+
           return Stack(
             children: [
               Container(
                 height: 220,
-                color: const Color(0xFFF3E239),
+                color: const Color(0xFFF0e23b),
                 child: Column(
                   children: [
                     Padding(
@@ -91,11 +93,12 @@ class _PreHomeState extends State<PreHome> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               SizedBox(
-                                  height: 33,
+                                  height: 50,
+                                  width: 120,
                                   child: ClipRRect(
                                       child: Image.asset(
-                                          'assets/images/fiaologo.png',
-                                          scale: 1.1,
+                                          'assets/images/FIAOEXPRESS_LOGO.jpg',
+
                                           fit: BoxFit.cover))),
                               const SizedBox(
                                 width: 5,
@@ -139,7 +142,7 @@ class _PreHomeState extends State<PreHome> {
 
                                     child: ClipRRect(
 
-                                        child: Image.asset('packages/login/assets/images/social.png',
+                                        child: Image.asset('assets/images/social.png',
                                             scale: 1.1,fit: BoxFit.cover, color: Colors.black,))
 
                                 ),
@@ -166,6 +169,7 @@ class _PreHomeState extends State<PreHome> {
                             "Hola,",
                             style: TextStyle(
                                 color: Colors.black,
+                                fontFamily: 'WHOAA',
                                 fontWeight: FontWeight.w600,
                                 fontSize: 35),
                           ),
@@ -289,7 +293,7 @@ class _PreHomeState extends State<PreHome> {
                                   ),
 
                                   child: ClipRRect(
-                                      child: Image.asset('packages/login/assets/images/products.png',scale: 1.1,fit: BoxFit.contain))
+                                      child: Image.asset('assets/images/products.png',scale: 1.1,fit: BoxFit.contain))
 
                               ),),
                               IconButton(onPressed: () {
@@ -308,7 +312,7 @@ class _PreHomeState extends State<PreHome> {
 
                                   child: ClipRRect(
 
-                                      child: Image.asset('packages/login/assets/images/person.png',scale: 1.1,fit: BoxFit.cover))
+                                      child: Image.asset('assets/images/person.png',scale: 1.1,fit: BoxFit.cover))
 
                               ),)
                             ],
@@ -352,7 +356,7 @@ class _PreHomeState extends State<PreHome> {
                     ),
                     color: Color(0xFFF4F4F4)),
                 child: Image.asset(
-                    'packages/login/assets/images/fiaoff.png',
+                    'assets/images/fiaoff.png',
                     width: 50,
                     height: 20,
                     scale: 1.2,
@@ -543,9 +547,9 @@ class _PreHomeState extends State<PreHome> {
 
       print("se encontro 2 productos $twoProducts y tres? $threeProducts");
     }
-    setState(() {
+
       aux++;
-    });
+
 
   }
 }

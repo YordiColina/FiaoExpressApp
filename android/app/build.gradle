@@ -1,14 +1,29 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+}
+
+// Carga las propiedades del archivo key.properties
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 android {
     namespace = "com.fiao_express_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -26,14 +41,14 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         ndk {
-            ndkVersion "29.0.13113456"
+            ndkVersion "29.0.13113456 "
             abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
     }
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.debug
+            signingConfig = signingConfigs.release // Asegúrate de que esto apunte al tipo correcto
         }
     }
 }
@@ -43,12 +58,11 @@ flutter {
 }
 
 dependencies {
-    implementation platform('com.google.firebase:firebase-bom:33.5.0') // Usa la última versión de BOM
+    implementation platform('com.google.firebase:firebase-bom:33.5.0')
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
-    implementation 'com.google.firebase:firebase-analytics' // Si usas Analytics
+    implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
-    // No uses firebase-core, ya que está incluido en el BOM
 }
 
-apply plugin: 'com.google.gms.google-services' // Asegúrate de que esta línea esté al final
+apply plugin: 'com.google.gms.google-services'

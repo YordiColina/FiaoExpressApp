@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../data/models/client_data.dart';
 import '../../data/models/contract_data.dart';
 import '../../data/models/fiao_express_status.dart';
@@ -199,6 +202,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       ) async {
     print("si disparo el evento para obtener los productos del usuario");
     try {
+      Map<String, dynamic>? data = {};
       CollectionReference clientes =
       FirebaseFirestore.instance.collection('clientes');
       QuerySnapshot querySnapshot = await clientes
@@ -215,54 +219,54 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             dataController.add(TextEditingController());
           }
           // Extrae los datos del contrato
-          Map<String, dynamic> contractData = datos['datosContrato'];
-          dataController[0].text = contractData['contratoNo'];
-          dataController[1].text = contractData['fechaContrato'];
-          dataController[2].text = contractData['asesor'];
+          Map<String, dynamic> contractData = datos['datosContrato'] ?? data;
+          dataController[0].text = contractData['contratoNo'] ?? "0";
+          dataController[1].text = contractData['fechaContrato'] ?? "";
+          dataController[2].text = contractData['asesor'] ?? "";
 
           // Extrae los datos del cliente
-          Map<String, dynamic> clientData = datos['datosCliente'];
-          dataController[3].text = clientData['nombre'];
-          dataController[4].text = clientData['cédula'];
-          dataController[5].text = clientData['teléfono'];
-          dataController[6].text = clientData['ubicación'];
-          dataController[7].text = clientData['dirección'];
+          Map<String, dynamic> clientData = datos['datosCliente'] ?? data;
+          dataController[3].text = clientData['nombre'] ?? "";
+          dataController[4].text = clientData['cédula'] ?? "";
+          dataController[5].text = clientData['teléfono'] ?? "0";
+          dataController[6].text = clientData['ubicación'] ?? "";
+          dataController[7].text = clientData['dirección'] ?? "";
 
-          Map<String, dynamic> selectedGroup = datos['grupo_inscrito'];
-          dataController[8].text = selectedGroup['plan'];
-          dataController[9].text = selectedGroup['grupo'];
-          dataController[10].text = selectedGroup['nro_de_lista'];
-          dataController[11].text = selectedGroup['posicion_en_la_lista'];
-          dataController[12].text = selectedGroup['modelo_de_moto'];
-          dataController[13].text = selectedGroup['marca_de_moto'];
-          dataController[14].text = selectedGroup['valor_cuota_mensual_en_dolares'];
-          dataController[15].text = selectedGroup['nro_de_cuotas_totales'];
+          Map<String, dynamic> selectedGroup = datos['grupo_inscrito'] ?? data;
+          dataController[8].text = selectedGroup['plan'] ?? "";
+          dataController[9].text = selectedGroup['grupo'] ?? "";
+          dataController[10].text = selectedGroup['nro_de_lista'] ?? "0";
+          dataController[11].text = selectedGroup['posicion_en_la_lista'] ?? "";
+          dataController[12].text = selectedGroup['modelo_de_moto'] ?? "";
+          dataController[13].text = selectedGroup['marca_de_moto'] ?? "";
+          dataController[14].text = selectedGroup['valor_cuota_mensual_en_dolares'] ?? "";
+          dataController[15].text = selectedGroup['nro_de_cuotas_totales'] ?? "1";
 
 
-          Map<String, dynamic> successPayments = datos['pagos_realizados'];
-          dataController[16].text = successPayments['cuotaInicial'];
-          dataController[17].text = successPayments['gastosADM'];
-          dataController[18].text = successPayments['nro_de_cuotas_canceladas'];
-          dataController[19].text = successPayments['nro_de_cuotas_restantes'];
-          dataController[20].text = successPayments["proxima_fecha_de_pago"];
+          Map<String, dynamic> successPayments = datos['pagos_realizados'] ?? data;
+          dataController[16].text = successPayments['cuotaInicial'] ?? "";
+          dataController[17].text = successPayments['gastosADM'] ?? "";
+          dataController[18].text = successPayments['nro_de_cuotas_canceladas'] ?? "1";
+          dataController[19].text = successPayments['nro_de_cuotas_restantes'] ?? "1";
+          dataController[20].text = successPayments["proxima_fecha_de_pago"] ?? "";
 
-          Map<String, dynamic> latePayment = datos['pago_de_morosidad'];
-          dataController[21].text = latePayment['díasDeRetraso'];
-          dataController[22].text = latePayment['morosidad'];
+          Map<String, dynamic> latePayment = datos['pago_de_morosidad'] ?? data;
+          dataController[21].text = latePayment['díasDeRetraso'] ?? "0";
+          dataController[22].text = latePayment['morosidad'] ?? "";
 
           Map<String, dynamic> fiaoExpressStatus =
-          datos['estatus_en_fiaoExpress'];
-          dataController[23].text = fiaoExpressStatus['estatus'];
+          datos['estatus_en_fiaoExpress'] ?? data;
+          dataController[23].text = fiaoExpressStatus['estatus'] ?? "";
 
 
           Map<String, dynamic> bikeDeliveryData =
-          datos['datos_de_entrega_de_la_moto'];
-          dataController[24].text = bikeDeliveryData['color'];
-          dataController[25].text = bikeDeliveryData['fecha_de_entrega'];
-          dataController[26].text = bikeDeliveryData['serialMotor'];
-          dataController[27].text = bikeDeliveryData['serialCarroceria'];
-          dataController[28].text = bikeDeliveryData['placa'];
-          dataController[29].text = bikeDeliveryData['observacion'];
+          datos['datos_de_entrega_de_la_moto'] ?? data;
+          dataController[24].text = bikeDeliveryData['color'] ?? "";
+          dataController[25].text = bikeDeliveryData['fecha_de_entrega'] ?? "";
+          dataController[26].text = bikeDeliveryData['serialMotor'] ?? "";
+          dataController[27].text = bikeDeliveryData['serialCarroceria'] ?? "";
+          dataController[28].text = bikeDeliveryData['placa'] ?? "";
+          dataController[29].text = bikeDeliveryData['observacion'] ?? "";
           print( selectedGroup['plan']);
         }
 
@@ -280,6 +284,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       ) async {
     print("si disparo el evento de los datos del usuario");
     try {
+      Map<String, dynamic>? data = {};
       CollectionReference usuarios =
       FirebaseFirestore.instance.collection('usuarios');
       QuerySnapshot querySnapshot = await usuarios
@@ -293,10 +298,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           dataController.add(TextEditingController());
         }
         // Extrae los datos del contrato
-        Map<String, dynamic> clientData = datos['datosCliente'];
-        dataController[0].text = clientData['nombre'];
-        dataController[1].text = clientData['cédula'];
-        dataController[2].text = clientData['correo'];
+        Map<String, dynamic> clientData = datos['datosCliente'] ?? data;
+        dataController[0].text = clientData['nombre'] ?? "";
+        dataController[1].text = clientData['cédula'] ?? "";
+        dataController[2].text = clientData['correo'] ?? "";
       }
       emit(state.copyWith(userDataController: dataController,
           status: true));
@@ -307,6 +312,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<bool> checkProduct(int index, TextEditingController controller) async {
     bool exist = false;
+    Map<String, dynamic>? data = {};
 
     try {
       DocumentSnapshot doc = await FirebaseFirestore.instance
@@ -336,6 +342,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<void> _getDataProduct(GetProductEvent event,
       Emitter<HomeState> emit,) async {
     print("si disparo el evento de los pproductos del usuario");
+    Map<String, dynamic>? data = {};
     try {
       CollectionReference clientes =
       FirebaseFirestore.instance.collection('clientes');
@@ -353,54 +360,54 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             dataController.add(TextEditingController());
           }
           // Extrae los datos del contrato
-          Map<String, dynamic> contractData = datos['datosContrato ${event.index}'];
-          dataController[0].text = contractData['contratoNo'];
-          dataController[1].text = contractData['fechaContrato'];
-          dataController[2].text = contractData['asesor'];
+          Map<String, dynamic> contractData = datos['datosContrato ${event.index}'] ?? data;
+          dataController[0].text = contractData['contratoNo'] ?? "0";
+          dataController[1].text = contractData['fechaContrato'] ?? "";
+          dataController[2].text = contractData['asesor'] ?? "";
 
           // Extrae los datos del cliente
-          Map<String, dynamic> clientData = datos['datosCliente'];
-          dataController[3].text = clientData['nombre'];
-          dataController[4].text = clientData['cédula'];
-          dataController[5].text = clientData['teléfono'];
-          dataController[6].text = clientData['ubicación'];
-          dataController[7].text = clientData['dirección'];
+          Map<String, dynamic> clientData = datos['datosCliente'] ?? "";
+          dataController[3].text = clientData['nombre'] ?? "";
+          dataController[4].text = clientData['cédula'] ?? "";
+          dataController[5].text = clientData['teléfono'] ?? "0";
+          dataController[6].text = clientData['ubicación'] ?? "";
+          dataController[7].text = clientData['dirección'] ?? "";
 
-          Map<String, dynamic> selectedGroup = datos['grupo_inscrito ${event.index}'];
-          dataController[8].text = selectedGroup['plan'];
-          dataController[9].text = selectedGroup['grupo'];
-          dataController[10].text = selectedGroup['nro_de_lista'];
-          dataController[11].text = selectedGroup['posicion_en_la_lista'];
-          dataController[12].text = selectedGroup['modelo_de_moto'];
-          dataController[13].text = selectedGroup['marca_de_moto'];
-          dataController[14].text = selectedGroup['valor_cuota_mensual_en_dolares'];
-          dataController[15].text = selectedGroup['nro_de_cuotas_totales'];
+          Map<String, dynamic> selectedGroup = datos['grupo_inscrito ${event.index}'] ?? data;
+          dataController[8].text = selectedGroup['plan'] ?? "";
+          dataController[9].text = selectedGroup['grupo'] ?? "";
+          dataController[10].text = selectedGroup['nro_de_lista'] ?? "0";
+          dataController[11].text = selectedGroup['posicion_en_la_lista'] ?? "0";
+          dataController[12].text = selectedGroup['modelo_de_moto'] ?? "";
+          dataController[13].text = selectedGroup['marca_de_moto'] ?? "";
+          dataController[14].text = selectedGroup['valor_cuota_mensual_en_dolares'] ?? "";
+          dataController[15].text = selectedGroup['nro_de_cuotas_totales'] ?? "1";
 
 
-          Map<String, dynamic> successPayments = datos['pagos_realizados ${event.index}'];
-          dataController[16].text = successPayments['cuotaInicial'];
-          dataController[17].text = successPayments['gastosADM'];
-          dataController[18].text = successPayments['nro_de_cuotas_canceladas'];
-          dataController[19].text = successPayments['nro_de_cuotas_restantes'];
-          dataController[20].text = successPayments["proxima_fecha_de_pago"];
+          Map<String, dynamic> successPayments = datos['pagos_realizados ${event.index}'] ?? data;
+          dataController[16].text = successPayments['cuotaInicial'] ?? "";
+          dataController[17].text = successPayments['gastosADM'] ?? "";
+          dataController[18].text = successPayments['nro_de_cuotas_canceladas'] ?? "1";
+          dataController[19].text = successPayments['nro_de_cuotas_restantes'] ?? "1";
+          dataController[20].text = successPayments["proxima_fecha_de_pago"] ?? "";
 
-          Map<String, dynamic> latePayment = datos['pago_de_morosidad ${event.index}'];
-          dataController[21].text = latePayment['díasDeRetraso'];
-          dataController[22].text = latePayment['morosidad'];
+          Map<String, dynamic> latePayment = datos['pago_de_morosidad ${event.index}'] ?? data;
+          dataController[21].text = latePayment['díasDeRetraso'] ?? "0";
+          dataController[22].text = latePayment['morosidad'] ?? "";
 
           Map<String, dynamic> fiaoExpressStatus =
-          datos['estatus_en_fiaoExpress ${event.index}'];
-          dataController[23].text = fiaoExpressStatus['estatus'];
+          datos['estatus_en_fiaoExpress ${event.index}'] ?? data;
+          dataController[23].text = fiaoExpressStatus['estatus'] ?? "";
 
 
           Map<String, dynamic> bikeDeliveryData =
-          datos['datos_de_entrega_de_la_moto ${event.index}'];
-          dataController[24].text = bikeDeliveryData['color'];
-          dataController[25].text = bikeDeliveryData['fecha_de_entrega'];
-          dataController[26].text = bikeDeliveryData['serialMotor'];
-          dataController[27].text = bikeDeliveryData['serialCarroceria'];
-          dataController[28].text = bikeDeliveryData['placa'];
-          dataController[29].text = bikeDeliveryData['observacion'];
+          datos['datos_de_entrega_de_la_moto ${event.index}'] ?? data;
+          dataController[24].text = bikeDeliveryData['color'] ?? "";
+          dataController[25].text = bikeDeliveryData['fecha_de_entrega'] ?? "";
+          dataController[26].text = bikeDeliveryData['serialMotor'] ?? "";
+          dataController[27].text = bikeDeliveryData['serialCarroceria'] ?? "";
+          dataController[28].text = bikeDeliveryData['placa'] ?? "";
+          dataController[29].text = bikeDeliveryData['observacion'] ?? "";
         }
        event.index == 2 ? emit(state.copyWith(productTwoData: dataController)) :
        emit(state.copyWith(productThreeData: dataController));
@@ -409,6 +416,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<File> getFileFromAsset(String asset) async {
+    try {
+      var data = await rootBundle.load(asset);
+      var bytes = data.buffer.asUint8List();
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/mi_archivo.pdf");
+      File assetFile = await file.writeAsBytes(bytes);
+      return assetFile;
+    } catch (e) {
+      throw Exception("Error al abrir el archivo");
     }
   }
 

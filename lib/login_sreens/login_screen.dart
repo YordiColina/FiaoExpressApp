@@ -16,7 +16,7 @@ class _LoginscreenState extends State<Loginscreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          color: Color(0xFFF3E239),
+          color: Color(0xFFF0e23b),
         ),
         child: Center(
           child: SingleChildScrollView(
@@ -33,7 +33,7 @@ class _LoginscreenState extends State<Loginscreen> {
 
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.asset('packages/login/assets/images/fiao.png',scale: 1.1,fit: BoxFit.cover))
+                              child: Image.asset('assets/images/fiao.png',scale: 1.1,fit: BoxFit.cover))
 
                       ),
 

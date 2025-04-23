@@ -36,9 +36,9 @@ class _LoginBodyState extends State<LoginBody> {
               padding: EdgeInsets.only( right: MediaQuery.of(context).size.width * 0.38,),
               child: const Text("Iniciar sesión",style: TextStyle(
                   color: Colors.black,
-                  fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w800,
-                  fontSize: 25
+                  fontSize: 25,
+                  fontFamily: 'CreatoDisplay-Regular'
               ),),
             ),
             const SizedBox(
@@ -172,7 +172,6 @@ class _LoginBodyState extends State<LoginBody> {
                   ),
                   child: const Text("Iniciar Sesión",style: TextStyle(
                       color: Color.fromRGBO(243, 226, 57, 100),
-                      fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.w800,
                       fontSize: 16
                   ),),
@@ -212,7 +211,6 @@ class _LoginBodyState extends State<LoginBody> {
                 ),
                 child: const Text("Regístrate",style: TextStyle(
                     color: Colors.black,
-                    fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w800,
                     fontSize: 16
                 ),),
