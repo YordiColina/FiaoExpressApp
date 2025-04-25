@@ -5,6 +5,7 @@ class PdfViewPage extends StatefulWidget {
   final String path;
 
   const PdfViewPage({Key? key, required this.path}) : super(key: key);
+
   @override
   _PdfViewPageState createState() => _PdfViewPageState();
 }
@@ -18,33 +19,42 @@ class _PdfViewPageState extends State<PdfViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text("My Document"),
+        title: Text("Catálogo"),
       ),
       body: Stack(
+
         children: <Widget>[
-          PDFView(
-            filePath: widget.path,
-            swipeHorizontal: true,
-            onError: (e) {
-              print(e);
-            },
-            onRender: (_pages) {
-              setState(() {
-                _total_de_paginas = _pages!;
-                _estaListoPDF = true;
-              });
-            },
-            onViewCreated: (PDFViewController vc) {
-              _pdfViewController = vc;
-            },
-            onPageChanged: PageChangedCallback.
-            onPageError: (page, e) {},
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
+            child: PDFView(
+              filePath: widget.path,
+              swipeHorizontal: true,
+              onError: (e) {
+                print(e);
+              },
+              onRender: (_pages) {
+                setState(() {
+                  _total_de_paginas = _pages!;
+                  _estaListoPDF = true;
+                });
+              },
+              onViewCreated: (PDFViewController vc) {
+                _pdfViewController = vc;
+              },
+              onPageChanged: (int? page, int? total) {
+                setState(() {
+                  _pagina_actual = page ?? 0;
+                });
+              },
+              onPageError: (page, e) {},
+            ),
           ),
           !_estaListoPDF
               ? Center(
-            child: CircularProgressIndicator(),
-          )
+                  child: CircularProgressIndicator(),
+                )
               : Offstage()
         ],
       ),
@@ -52,24 +62,16 @@ class _PdfViewPageState extends State<PdfViewPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           _pagina_actual > 0
-              ? FloatingActionButton.extended(
-            backgroundColor: Colors.red,
-            label: Text("Go to ${_pagina_actual - 1}"),
-            onPressed: () {
-              _pagina_actual -= 1;
-              _pdfViewController.setPage(_pagina_actual);
-            },
-          )
+              ? IconButton(onPressed: (){
+            _pagina_actual -= 1;
+            _pdfViewController.setPage(_pagina_actual);
+          }, icon: Icon(Icons.arrow_back_ios))
               : Offstage(),
-          _pagina_actual+1 < _total_de_paginas
-              ? FloatingActionButton.extended(
-            backgroundColor: Colors.green,
-            label: Text("Go to ${_pagina_actual + 1}"),
-            onPressed: () {
-              _pagina_actual += 1;
-              _pdfViewController.setPage(_pagina_actual);
-            },
-          )
+          _pagina_actual + 1 < _total_de_paginas
+              ? IconButton(onPressed: (){
+            _pagina_actual += 1;
+            _pdfViewController.setPage(_pagina_actual);
+          } , icon: Icon(Icons.arrow_forward_ios))
               : Offstage(),
         ],
       ),

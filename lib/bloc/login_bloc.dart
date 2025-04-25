@@ -59,7 +59,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       if (event.nombre != "" && event.password == event.repeatPassword) {
       final newState = state.copyWith(user: UserData(
-            nombre: event.nombre, cedula: event.cedula, correo: event.email));
+            nombre: event.nombre, cedula: event.cedula, correo: event.email, telefono: event.telefono));
       emit(newState);
         await _usuarios
             .doc(state.user?.correo)

@@ -9,7 +9,6 @@ import '../home_screens/home_bloc/home_bloc.dart';
 import '../home_screens/profile_screen.dart';
 import '../home_screens/sign_out_screen.dart';
 import '../utils/firebase_service.dart';
-import 'notification_pre_screen.dart';
 
 class PreHome extends StatefulWidget {
   final String email;
@@ -26,6 +25,8 @@ class _PreHomeState extends State<PreHome> {
   late HomeBloc homeBloc ;
   bool twoProducts = false;
   LoginBloc bloc = LoginBloc();
+  String assetPDFPath = "";
+  String assetPDFPath2 = "";
   String userEmail = "";
   bool canCreate = false;
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -42,6 +43,18 @@ class _PreHomeState extends State<PreHome> {
     homeBloc = BlocProvider.of<HomeBloc>(context);
     getToken();
     _requestPermission();
+    homeBloc.getFileFromAsset("assets/linea_blanca.pdf").then((f) {
+      setState(() {
+        assetPDFPath = f.path;
+        print(assetPDFPath);
+      });
+    });
+    homeBloc.getFileFromAsset2("assets/CATALOGO_2025.pdf").then((f) {
+      setState(() {
+        assetPDFPath2 = f.path;
+        print(assetPDFPath);
+      });
+    });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('Mensaje clickeado: ${message.notification?.title}');
@@ -286,7 +299,7 @@ class _PreHomeState extends State<PreHome> {
                             children: [
                               IconButton(onPressed: () {
                                 Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => const CategoriesScreen()));
+                                    MaterialPageRoute(builder: (context) => CategoriesScreen(assetPDFPath: assetPDFPath, assetPDFPath2: assetPDFPath2 ,)));
                               }, icon:  Container(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20)

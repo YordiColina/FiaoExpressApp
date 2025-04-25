@@ -195,8 +195,8 @@ class _LoginBodyState extends State<LoginBody> {
                         value: bloc,  // Usa el mismo LoginBloc de LoginBody
                         child: DraggableScrollableSheet(
                           expand: false,
-                          minChildSize: 0.8,
-                          initialChildSize: 0.8,
+                          minChildSize: 0.9,
+                          initialChildSize: 0.9,
                           builder: (context, scrollController) {
                             return const CreateAccount();
                           },

@@ -12,6 +12,7 @@ class CreateAccount extends StatefulWidget {
 }
 
 TextEditingController _nameController = TextEditingController();
+TextEditingController _phoneController = TextEditingController();
 TextEditingController _idController = TextEditingController();
 TextEditingController _emailController = TextEditingController();
 TextEditingController _passwordController = TextEditingController();
@@ -155,6 +156,36 @@ class _CreateAccountState extends State<CreateAccount> {
                         height: 15,
                       ),
                       TextField(
+                        controller: _phoneController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: 'Número de teléfono',
+                          hintStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.black, // Color del borde
+                              width: 2.0, // Ancho del borde
+                            ),
+                          ),
+                        ),
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight
+                                .w600 // Cambia este color según tus preferencias
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      TextField(
                         controller: _passwordController,
                         decoration: InputDecoration(
                           filled: true,
@@ -214,11 +245,13 @@ class _CreateAccountState extends State<CreateAccount> {
                           onPressed: () {
                             if (_emailController.text != "" &&
                                 _passwordController.text != "" &&
+                                _phoneController.text != "" &&
                                 _nameController.text != "" &&
                                 _idController.text != "" &&
                                 _repeatPasswordController.text != "") {
                               context.read<LoginBloc>().add(CreateAccountEvent(
                                   _emailController.text.trim(),
+                                  _phoneController.text.trim(),
                                   _passwordController.text.trim(),
                                   context,_nameController.text.trim(),
                                   _idController.text.trim(),_repeatPasswordController.text.trim()));
